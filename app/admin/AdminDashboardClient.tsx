@@ -90,6 +90,7 @@ export default function AdminDashboardClient({
     quantity: "",
     category: "TEXTILE" as Category,
     images: [] as string[],
+    videoUrl: "",
   });
 
   // Order Status Update State
@@ -109,6 +110,7 @@ export default function AdminDashboardClient({
       quantity: "",
       category: "TEXTILE" as Category,
       images: [],
+      videoUrl: "",
     });
   };
 
@@ -235,6 +237,7 @@ export default function AdminDashboardClient({
                       }
                     />
                   </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea
@@ -248,36 +251,36 @@ export default function AdminDashboardClient({
                       }
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="price">Price</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        value={productForm.price}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            price: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="quantity">Quantity</Label>
-                      <Input
-                        id="quantity"
-                        type="number"
-                        value={productForm.quantity}
-                        onChange={(e) =>
-                          setProductForm({
-                            ...productForm,
-                            quantity: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="price">Price</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      value={productForm.price}
+                      onChange={(e) =>
+                        setProductForm({
+                          ...productForm,
+                          price: e.target.value,
+                        })
+                      }
+                    />
                   </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="quantity">Quantity</Label>
+                    <Input
+                      id="quantity"
+                      type="number"
+                      value={productForm.quantity}
+                      onChange={(e) =>
+                        setProductForm({
+                          ...productForm,
+                          quantity: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
                   <div className="space-y-2">
                     <Label htmlFor="category">Category</Label>
                     <Select
@@ -295,6 +298,64 @@ export default function AdminDashboardClient({
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* Video URL input */}
+                  <div className="space-y-2">
+                    <Label htmlFor="videoUrl">Video URL</Label>
+                    <Input
+                      id="videoUrl"
+                      type="text"
+                      value={productForm.videoUrl}
+                      onChange={(e) =>
+                        setProductForm({
+                          ...productForm,
+                          videoUrl: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  {/* Images input (multiple URLs) */}
+                  <div className="space-y-2">
+                    <Label>Image URLs</Label>
+                    {productForm.images.map((url, idx) => (
+                      <div key={idx} className="flex gap-2 mb-2">
+                        <Input
+                          type="text"
+                          value={url}
+                          onChange={(e) => {
+                            const newImages = [...productForm.images];
+                            newImages[idx] = e.target.value;
+                            setProductForm({ ...productForm, images: newImages });
+                          }}
+                          placeholder={`Image URL #${idx + 1}`}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            const newImages = productForm.images.filter((_, i) => i !== idx);
+                            setProductForm({ ...productForm, images: newImages });
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() =>
+                        setProductForm({
+                          ...productForm,
+                          images: [...productForm.images, ""],
+                        })
+                      }
+                    >
+                      Add Image URL
+                    </Button>
+                  </div>
+
                   <Button type="submit" disabled={isLoading}>
                     {isLoading ? "Creating..." : "Create Product"}
                   </Button>
@@ -302,40 +363,91 @@ export default function AdminDashboardClient({
               </DialogContent>
             </Dialog>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products.map((product) => (
-              <Card key={product.id} className="p-4">
-                {product.images[0] && (
-                  <div className="relative h-48 mb-4">
-                    <Image
-                      src={product.images[0].url}
-                      alt={product.name}
-                      fill
-                      className="object-cover rounded-md"
-                    />
-                  </div>
-                )}
-                <h3 className="font-bold">{product.name}</h3>
-                <p className="text-sm text-gray-500 line-clamp-2">
-                  {product.description}
-                </p>
-                <div className="mt-2 flex justify-between items-center">
-                  <p className="font-bold">{formatPrice(product.price)}</p>
-                  <Badge>{product.category}</Badge>
-                </div>
-                <div className="mt-2 flex justify-between items-center">
-                  <p className="text-sm">Stock: {product.quantity}</p>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeleteProduct(product.id)}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
+          {/* Grouped Product Display */}
+<div className="space-y-10">
+  {/* Fertilizers Section */}
+  <div className="mt-10">
+    <h3 className="text-2xl text-center font-semibold mb-2 text-green-400">Fertilizers</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {products
+        .filter((product) => product.category === "FERTILIZER")
+        .map((product) => (
+          <Card key={product.id} className="p-4">
+            {product.images[0] && (
+              <div className="relative h-48 mb-4">
+                <Image
+                  src={product.images[0].url}
+                  alt={product.name}
+                  fill
+                  className="object-cover rounded-md"
+                />
+              </div>
+            )}
+            <h3 className="font-bold">{product.name}</h3>
+            <p className="text-sm text-gray-500 line-clamp-2">
+              {product.description}
+            </p>
+            <div className="mt-2 flex justify-between items-center">
+              <p className="font-bold">{formatPrice(product.price)}</p>
+              <Badge>{product.category}</Badge>
+            </div>
+            <div className="mt-2 flex justify-between items-center">
+              <p className="text-sm">Stock: {product.quantity}</p>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => handleDeleteProduct(product.id)}
+              >
+                Delete
+              </Button>
+            </div>
+          </Card>
+        ))}
+    </div>
+  </div>
+
+  {/* Textiles Section */}
+  <div>
+    <h3 className="text-2xl text-center font-semibold text-blue-300 mb-2">Textiles</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {products
+        .filter((product) => product.category === "TEXTILE")
+        .map((product) => (
+          <Card key={product.id} className="p-4">
+            {product.images[0] && (
+              <div className="relative h-48 mb-4">
+                <Image
+                  src={product.images[0].url}
+                  alt={product.name}
+                  fill
+                  className="object-cover rounded-md"
+                />
+              </div>
+            )}
+            <h3 className="font-bold">{product.name}</h3>
+            <p className="text-sm text-gray-500 line-clamp-2">
+              {product.description}
+            </p>
+            <div className="mt-2 flex justify-between items-center">
+              <p className="font-bold">{formatPrice(product.price)}</p>
+              <Badge>{product.category}</Badge>
+            </div>
+            <div className="mt-2 flex justify-between items-center">
+              <p className="text-sm">Stock: {product.quantity}</p>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => handleDeleteProduct(product.id)}
+              >
+                Delete
+              </Button>
+            </div>
+          </Card>
+        ))}
+    </div>
+  </div>
+</div>
+
         </TabsContent>
 
         {/* Orders Tab */}

@@ -66,15 +66,19 @@ export function ProductCard({ product }: { product: Product }) {
         </Link>
 
         <div className="flex items-center justify-between">
-          <p className="font-medium text-lg">${product.price.toFixed(2)}</p>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleAddToCart}
-            className="hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
-          >
-            <ShoppingCart className="h-5 w-5" />
-          </Button>
+          {product.category !== "FERTILIZER" ? (
+            <>
+              <p className="font-medium text-lg">${product.price.toFixed(2)}</p>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleAddToCart}
+                className="hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
+              >
+                <ShoppingCart className="h-5 w-5" />
+              </Button>
+            </>
+          ) : null}
         </div>
       </div>
     </div>

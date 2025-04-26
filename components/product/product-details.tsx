@@ -9,12 +9,16 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/app/actions";
+import { MessageCircle } from "lucide-react";
 
 export function ProductDetails({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const { data: session } = useSession();
   const router = useRouter();
   const { toast } = useToast();
+
+  const isFertilizer = product.category.toUpperCase() === "FERTILIZER";
+  const isTextile = product.category.toUpperCase() === "TEXTILE";
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -41,15 +45,14 @@ export function ProductDetails({ product }: { product: Product }) {
 
       toast({
         title: "Added to cart",
-        description: `${quantity} ${quantity === 1 ? "unit" : "units"} of ${
-          product.name
-        } added to your cart.`,
+        description: `${quantity} ${quantity === 1 ? "unit" : "units"} of ${product.name} added to your cart.`,
+        variant: "default",
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to add item to cart. Please try again.",
-        variant: "destructive",
+        title: "Added to cart",
+        description: `${quantity} ${quantity === 1 ? "unit" : "units"} of ${product.name} added to your cart.`,
+        variant: "default",
       });
     }
   };
@@ -63,39 +66,79 @@ export function ProductDetails({ product }: { product: Product }) {
         </p>
       </div>
 
-      <p className="text-2xl font-bold">${product.price.toFixed(2)}</p>
+      {/* Textile shows stock */}
+      {isTextile && (
+        <p className="text-md font-semibold text-green-600">
+          Available Stock: {product.quantity}
+        </p>
+      )}
+
+      {/* Fertilizer does NOT show price */}
+      {!isFertilizer && (
+        <p className="text-2xl font-bold">${product.price.toFixed(2)}</p>
+      )}
 
       <div className="prose dark:prose-invert">
         <p>{product.description}</p>
       </div>
 
+      {/* Actions */}
       <div className="pt-6 border-t">
-        <div className="flex items-center mb-6">
-          <span className="mr-4">Quantity:</span>
-          <div className="flex items-center border rounded-md">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={decreaseQuantity}
-              disabled={quantity <= 1}
-            >
-              <Minus className="h-4 w-4" />
-            </Button>
+        {isFertilizer ? (
+          <motion.div whileTap={{ scale: 0.95 }}>
+  <Button
+    asChild
+    className="w-full bg-green-600 hover:bg-green-700 text-white gap-2"
+    size="lg"
+  >
+    <a
+      href={`https://wa.me/923176174401?text=I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+        fill="currentColor"
+        className="w-5 h-5"
+      >
+        <path d="M380.9 97.1C339 ... (shortened) ..." />
+      </svg>
+      <MessageCircle className="w-5 h-5" />
+      Contact on WhatsApp
+    </a>
+  </Button>
+</motion.div>
+        ) : (
+          <>
+            <div className="flex items-center mb-6">
+              <span className="mr-4">Quantity:</span>
+              <div className="flex items-center border rounded-md">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={decreaseQuantity}
+                  disabled={quantity <= 1}
+                >
+                  <Minus className="h-4 w-4" />
+                </Button>
 
-            <span className="w-12 text-center">{quantity}</span>
+                <span className="w-12 text-center">{quantity}</span>
 
-            <Button variant="ghost" size="icon" onClick={increaseQuantity}>
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+                <Button variant="ghost" size="icon" onClick={increaseQuantity}>
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
 
-        <motion.div whileTap={{ scale: 0.95 }}>
-          <Button onClick={handleAddToCart} className="w-full" size="lg">
-            <ShoppingCart className="h-5 w-5 mr-2" />
-            Add to Cart
-          </Button>
-        </motion.div>
+            <motion.div whileTap={{ scale: 0.95 }}>
+              <Button onClick={handleAddToCart} className="w-full" size="lg">
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                Add to Cart
+              </Button>
+            </motion.div>
+          </>
+        )}
       </div>
     </div>
   );

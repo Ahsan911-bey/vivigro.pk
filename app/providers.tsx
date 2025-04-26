@@ -1,17 +1,11 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { Toaster } from "@/components/ui/toaster";
 
-interface ProvidersProps {
-  children: React.ReactNode;
-}
-
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider refetchInterval={5 * 60}>
+    <SessionProvider>
       {children}
-      <Toaster />
     </SessionProvider>
   );
 }
