@@ -26,7 +26,7 @@ export function MissionVision() {
             </div>
 
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              To provide high-quality textile and fertilizer products that help businesses and farmers across Pakistan
+              To provide high-qualityfertilizer products that help  farmers across Pakistan
               achieve sustainable growth and success.
             </p>
 
@@ -38,7 +38,7 @@ export function MissionVision() {
               <li className="flex items-start">
                 <Check className="h-5 w-5 text-emerald-600 mr-2 mt-0.5" />
                 <span className="text-gray-600 dark:text-gray-300">
-                  Support sustainable farming and manufacturing practices
+                  Support sustainable farming 
                 </span>
               </li>
               <li className="flex items-start">
@@ -64,7 +64,7 @@ export function MissionVision() {
             </div>
 
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              To be the leading provider of textile and agricultural solutions in Pakistan, recognized for our quality,
+              To be the leading provider of Fertilizers in Pakistan, recognized for our quality,
               innovation, and commitment to customer success.
             </p>
 
@@ -78,7 +78,7 @@ export function MissionVision() {
               <li className="flex items-start">
                 <Check className="h-5 w-5 text-emerald-600 mr-2 mt-0.5" />
                 <span className="text-gray-600 dark:text-gray-300">
-                  Innovate and adopt new technologies to improve our products and services
+                  Innovate and adopt new technologies to improve our products 
                 </span>
               </li>
             </ul>

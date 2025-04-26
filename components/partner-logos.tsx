@@ -5,12 +5,12 @@ import { motion, useAnimation, useInView } from "framer-motion"
 import Image from "next/image"
 
 const partners = [
-  { id: 1, name: "Partner 1", logo: "/placeholder.svg?height=100&width=200" },
-  { id: 2, name: "Partner 2", logo: "/placeholder.svg?height=100&width=200" },
-  { id: 3, name: "Partner 3", logo: "/placeholder.svg?height=100&width=200" },
-  { id: 4, name: "Partner 4", logo: "/placeholder.svg?height=100&width=200" },
-  { id: 5, name: "Partner 5", logo: "/placeholder.svg?height=100&width=200" },
-  { id: 6, name: "Partner 6", logo: "/placeholder.svg?height=100&width=200" },
+  { id: 1, name: "Old Plow", logo: "https://vivigro.com/wp-content/uploads/2023/08/old-plow-logo-1-1.png" },
+  { id: 2, name: "Growers Supply", logo: "https://vivigro.com/wp-content/uploads/2023/08/groweres-supply-logo.png" },
+  { id: 3, name: "Ropana", logo: "https://vivigro.com/wp-content/uploads/2023/08/ropana-logo.png" },
+  { id: 4, name: "HC Water Tech", logo: "https://vivigro.com/wp-content/uploads/2023/08/hc-water-tech.png" },
+  { id: 5, name: "ViviGro Springwater Plant", logo: "https://vivigro.com/wp-content/uploads/2023/08/VIVIGRO-LOGO.png" },
+  { id: 6, name: "ViviGro Abbey Warehouse", logo: "https://vivigro.com/wp-content/uploads/2023/08/VIVIGRO-LOGO.png" },
 ]
 
 export function PartnerLogos() {
@@ -56,7 +56,7 @@ export function PartnerLogos() {
         <motion.div
           key={partner.id}
           variants={itemVariants}
-          className="flex items-center justify-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+          className="flex flex-col items-center justify-center p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm hover:shadow-md transition-shadow gap-3"
         >
           <Image
             src={partner.logo || "/placeholder.svg"}
@@ -65,6 +65,7 @@ export function PartnerLogos() {
             height={60}
             className="max-h-12 w-auto object-contain grayscale hover:grayscale-0 transition-all"
           />
+          <p className="text-sm font-medium text-center text-gray-700 dark:text-gray-300">{partner.name}</p>
         </motion.div>
       ))}
     </motion.div>

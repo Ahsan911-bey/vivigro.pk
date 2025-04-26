@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { PartnerLogos } from "@/components/partner-logos";
 import { HistorySnippet } from "@/components/history-snippet";
 import { Card } from "@/components/ui/card";
 import { Product } from "@prisma/client";
+import { TrustedPartners } from "@/components/trusted-partners";
 
 // Add formatPrice utility
 const formatPrice = (price: number) => {
@@ -25,50 +25,41 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
   return (
     <div className="container mx-auto px-4">
       {/* Hero Section */}
-      <section className="py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Premium Solutions for
-              <span className="text-emerald-600 block">
-                Textile & Agriculture
-              </span>
-            </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-              Vivigro provides high-quality textile and fertilizer products to
-              businesses across Pakistan. With years of expertise and trusted
-              partnerships, we deliver excellence in every product.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg">
-                <Link href="/catalog">Browse Catalog</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/contact">Contact Us</Link>
-              </Button>
-            </div>
-          </div>
-          <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-            <Image
-              src="/placeholder.svg?height=800&width=600"
-              alt="Vivigro Products"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </div>
-      </section>
+      <section className="relative h-[90vh] w-full flex items-center justify-center">
+  {/* Background Image */}
+  <Image
+    src="https://videos.openai.com/vg-assets/assets%2Ftask_01jssnwsabenytg91sk4xf4093%2F1745692393_img_0.webp?st=2025-04-26T17%3A25%3A01Z&se=2025-05-02T18%3A25%3A01Z&sks=b&skt=2025-04-26T17%3A25%3A01Z&ske=2025-05-02T18%3A25%3A01Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=cWhVyvfEEW%2BvTG0GWhPtbB0Yfkb1oOiyLg3QCLvBKak%3D&az=oaivgprodscus" // <-- Replace with your fertilizer hero image
+    alt="Vivigro Fertilizers"
+    fill
+    className="object-cover"
+    priority
+  />
+
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/50" /> {/* Optional dark overlay for better text readability */}
+
+  {/* Text Content */}
+  <div className="relative z-10 text-center text-white px-6">
+    <h1 className="text-4xl md:text-6xl font-bold mb-6">
+      Nourish Your Crops,
+      <span className="block text-emerald-400">Grow Your Future</span>
+    </h1>
+    <p className="text-lg md:text-xl mb-8">
+      Vivigro delivers premium fertilizers that enrich your soil and empower your harvests across Pakistan.
+    </p>
+    <div className="flex flex-wrap justify-center gap-4">
+      <Button asChild size="lg">
+        <Link href="/catalog">Browse Catalog</Link>
+      </Button>
+      <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
+        <Link href="/contact">Contact Us</Link>
+      </Button>
+    </div>
+  </div>
+</section>
 
       {/* Partner Logos Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800 rounded-xl my-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-12">
-            Trusted by Industry Leaders
-          </h2>
-          <PartnerLogos />
-        </div>
-      </section>
+      <TrustedPartners />
 
       {/* Featured Fertilizers Section */}
       <section className="py-16">

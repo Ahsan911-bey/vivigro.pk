@@ -1,7 +1,7 @@
 import Image from "next/image"
-import { Timeline } from "@/components/about/timeline"
-import { Partners } from "@/components/about/partners"
 import { MissionVision } from "@/components/about/mission-vision"
+import { TrustedPartners } from "@/components/trusted-partners"
+import { Journey } from "@/components/about/journey"
 
 export default function AboutPage() {
   return (
@@ -17,31 +17,32 @@ export default function AboutPage() {
         <div>
           <h2 className="text-3xl font-bold mb-6">Our Story</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Founded in 2005, Vivigro began as a small supplier of agricultural products in Karachi. With a vision to
-            provide high-quality products to Pakistani businesses, we quickly expanded our offerings to include textile
-            solutions.
+          ViviGro Sustainable Solutions Ltd., based in Saskatoon, Saskatchewan, Canada, is a leader in soil
+          health and restoration, specializing in eco-friendly, biodegradable fertilizer blends. The company
+          focuses on sustainable and regenerative farming practices, offering customized solutions to
+          improve soil fertility, reduce reliance on synthetic inputs, and enhance crop yields.
           </p>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Over the years, we've grown from a local supplier to a nationwide distributor, serving businesses of all
-            sizes across Pakistan. Our commitment to quality, innovation, and customer satisfaction has been the
-            cornerstone of our success.
+          ViviGro serves a diverse range of agricultural clients, from large-scale farmers growing cereals, oilseeds, and
+          legumes to smaller markets like vegetable farms, greenhouses, and hobby farms. Their products, which include granular,
+           liquid, and organic-approved fertilizers, are 100% filler-free, customizable,and designed to minimize environmental impact 
+           while promoting biodiversity and food quality.
           </p>
           <p className="text-gray-600 dark:text-gray-300">
-            Today, Vivigro is recognized as a leading provider of premium textile and fertilizer products, trusted by
-            farmers, manufacturers, and businesses throughout the country.
-          </p>
+          Founded by Yasir Syed, ViviGro has grown to serve over 750,000 acres of farmland with a
+          commitment to environmental stewardship and innovative soil health solutions.          </p>
         </div>
 
         <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-          <Image src="/placeholder.svg?height=800&width=600" alt="Vivigro History" fill className="object-cover" />
+          <Image src="https://vivigro.com/wp-content/uploads/2023/09/IMG_0149-scaled.jpg" alt="Vivigro History" fill className="object-cover" />
         </div>
       </div>
 
-      <Timeline />
+      <Journey />
 
       <MissionVision />
 
-      <Partners />
+      <TrustedPartners />
     </div>
   )
 }

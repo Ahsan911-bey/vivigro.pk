@@ -17,14 +17,14 @@ export function HistorySnippet() {
         animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
         transition={{ duration: 0.7, ease: "easeOut" }}
       >
-        <h2 className="text-3xl font-bold mb-6">Our Journey</h2>
+        <h2 className="text-3xl font-bold mb-6">About Us</h2>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Founded in 2005, Vivigro has grown from a small local supplier to one of Pakistan's leading providers of
-          textile and agricultural solutions.
+        ViviGro Sustainable Solutions Ltd., based in Saskatoon, Saskatchewan, Canada, is a
+        leader in soil health and restoration, specializing in eco-friendly, biodegradable fertilizer blends.
         </p>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          With a commitment to quality and innovation, we've built strong relationships with farmers, manufacturers, and
-          businesses across the country, helping them achieve sustainable growth and success.
+        The company focuses on sustainable and regenerative farming practices, offering customized
+        solutions to improve soil fertility, reduce reliance on synthetic inputs, and enhance crop yields.
         </p>
         <Button asChild variant="outline">
           <Link href="/about">Learn More About Us</Link>
@@ -37,7 +37,7 @@ export function HistorySnippet() {
         transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
         className="relative h-[400px] rounded-lg overflow-hidden shadow-xl"
       >
-        <Image src="/placeholder.svg?height=800&width=600" alt="Vivigro History" fill className="object-cover" />
+        <Image src="https://vivigro.com/wp-content/uploads/2023/09/IMG_0149-scaled.jpg" alt="Vivigro History" fill className="object-cover" />
       </motion.div>
     </div>
   )
