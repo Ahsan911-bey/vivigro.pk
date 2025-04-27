@@ -9,11 +9,7 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  getCartItems,
-  removeFromCart,
-  updateCartItemQuantity,
-} from "@/app/actions";
+import { getCartItems, removeFromCart, updateCartItemQuantity } from "@/app/actions";
 import { useCart } from "@/contexts/cart-context";
 
 type CartItem = {
@@ -64,9 +60,7 @@ export default function CartPage() {
       if (result.error) {
         throw new Error(result.error);
       }
-      setItems(
-        items.map((item) => (item.id === id ? { ...item, quantity } : item))
-      );
+      setItems(items.map((item) => (item.id === id ? { ...item, quantity } : item)));
       await updateCartCount();
     } catch (error) {
       toast({
@@ -95,10 +89,7 @@ export default function CartPage() {
   };
 
   const getTotalPrice = () => {
-    return items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
+    return items.reduce((total, item) => total + item.product.price * item.quantity, 0);
   };
 
   if (isLoading) {
@@ -130,101 +121,96 @@ export default function CartPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="border rounded-lg overflow-hidden">
-            <div className="bg-gray-50 dark:bg-gray-800 p-4 border-b">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-6">
-                  <h3 className="font-medium">Product</h3>
+          <div className="space-y-4">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col md:flex-row items-center md:items-start bg-card border rounded-lg p-6 gap-6 shadow-sm hover:shadow-md transition-shadow"
+              >
+                {/* Image */}
+                <div className="relative h-40 w-40 md:h-48 md:w-48 rounded-lg overflow-hidden bg-muted">
+                  <Image
+                    src={item.product.images[0]?.url || "/placeholder.svg"}
+                    alt={item.product.name}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 160px, 192px"
+                    priority
+                  />
                 </div>
-                <div className="col-span-2 text-center">
-                  <h3 className="font-medium">Price</h3>
-                </div>
-                <div className="col-span-2 text-center">
-                  <h3 className="font-medium">Quantity</h3>
-                </div>
-                <div className="col-span-2 text-right">
-                  <h3 className="font-medium">Total</h3>
-                </div>
-              </div>
-            </div>
 
-            <div className="divide-y">
-              {items.map((item) => (
-                <div key={item.id} className="p-4">
-                  <div className="grid grid-cols-12 gap-4 items-center">
-                    <div className="col-span-6">
-                      <div className="flex items-center gap-4">
-                        <div className="relative h-16 w-16 rounded overflow-hidden flex-shrink-0">
-                          <Image
-                            src={
-                              item.product.images[0]?.url || "/placeholder.svg"
-                            }
-                            alt={item.product.name}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                        <div>
-                          <h4 className="font-medium">{item.product.name}</h4>
-                        </div>
-                      </div>
-                    </div>
+                {/* Details */}
+                <div className="flex flex-col flex-1 items-center md:items-start">
+                  <h4 className="font-semibold text-lg md:text-xl">{item.product.name}</h4>
+                  <p className="text-primary font-medium text-lg mt-1">
+                    ${item.product.price.toFixed(2)}
+                  </p>
 
-                    <div className="col-span-2 text-center">
-                      <p>${item.product.price.toFixed(2)}</p>
-                    </div>
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-3 mt-4">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="h-8 w-8 rounded-md"
+                      onClick={() =>
+                        handleUpdateQuantity(item.id, Math.max(1, item.quantity - 1))
+                      }
+                      disabled={item.quantity <= 1}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="text-lg font-medium w-8 text-center">{item.quantity}</span>
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="h-8 w-8 rounded-md"
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
 
-                    <div className="col-span-2">
-                      <div className="flex items-center justify-center border rounded-md">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() =>
-                            handleUpdateQuantity(
-                              item.id,
-                              Math.max(1, item.quantity - 1)
-                            )
-                          }
-                          disabled={item.quantity <= 1}
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-
-                        <span className="w-8 text-center">{item.quantity}</span>
-
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() =>
-                            handleUpdateQuantity(item.id, item.quantity + 1)
-                          }
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="col-span-2 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <p className="font-medium">
-                          ${(item.product.price * item.quantity).toFixed(2)}
-                        </p>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => handleRemoveItem(item.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
-                      </div>
-                    </div>
+                  {/* Item Total - Mobile */}
+                  <div className="mt-4 md:hidden">
+                    <p className="text-lg font-semibold">
+                      Total: ${(item.product.price * item.quantity).toFixed(2)}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Right Section - Desktop */}
+                <div className="hidden md:flex flex-col items-end gap-4">
+                  <p className="text-xl font-semibold">
+                    ${(item.product.price * item.quantity).toFixed(2)}
+                  </p>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="flex items-center gap-2"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Remove
+                  </Button>
+                </div>
+
+                {/* Remove Button - Mobile */}
+                <div className="md:hidden w-full">
+                  <Button
+                    variant="destructive"
+                    className="w-full mt-2 flex items-center justify-center gap-2"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Remove
+                  </Button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Summary */}
         <div>
           <div className="border rounded-lg p-6 sticky top-20">
             <h3 className="text-xl font-bold mb-4">Order Summary</h3>

@@ -170,31 +170,59 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <div className="flex items-center justify-between pt-4 border-t">
+            <div className="pt-4 border-t">
               {session?.user ? (
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-emerald-100 text-emerald-700">
-                      {getInitials(
-                        session.user.name || session.user.email || ""
+                <>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-emerald-100 text-emerald-700">
+                        {getInitials(
+                          session.user.name || session.user.email || ""
+                        )}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex justify-between items-center flex-1">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          signOut();
+                          setIsMenuOpen(false);
+                        }}
+                        className="text-sm"
+                      >
+                        Logout
+                      </Button>
+                      {(session.user as any).role === "ADMIN" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="text-sm"
+                        >
+                          <Link
+                            href="/admin"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Admin Dashboard
+                          </Link>
+                        </Button>
                       )}
-                    </AvatarFallback>
-                  </Avatar>
-                  <button
-                    onClick={() => signOut()}
-                    className="text-sm font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
+                    </div>
+                  </div>
+                </>
               ) : (
-                <Link
-                  href="/login"
-                  className="text-sm font-medium"
-                  onClick={() => setIsMenuOpen(false)}
+                <Button
+                  asChild
+                  className="w-full"
                 >
-                  Login / Register
-                </Link>
+                  <Link
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login / Register
+                  </Link>
+                </Button>
               )}
             </div>
           </nav>
