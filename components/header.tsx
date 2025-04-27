@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,8 +21,16 @@ import { useCart } from "@/contexts/cart-context";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { data: session } = useSession();
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const { cartCount } = useCart();
+
+  // Force a re-render when session status changes
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.refresh();
+    }
+  }, [status, router]);
 
   const getInitials = (name: string) => {
     return name?.charAt(0)?.toUpperCase() || "U";
