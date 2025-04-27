@@ -54,11 +54,33 @@ interface AdminDashboardClientProps {
   orders: {
     id: string;
     user: {
+      id: string;
       name: string;
+      email: string;
+      role: Role;
     };
     totalAmount: number;
     status: OrderStatus;
     createdAt: Date;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    items: {
+      id: string;
+      productId: string;
+      orderId: string;
+      quantity: number;
+      price: number;
+      product: {
+        name: string;
+        price: number;
+      };
+    }[];
   }[];
   users: {
     id: string;
@@ -490,21 +512,74 @@ export default function AdminDashboardClient({
                       {new Date(order.createdAt).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-2">
-                      <Select
-                        value={orderStatuses[order.id] || order.status}
-                        onValueChange={(value: OrderStatus) => {
-                          handleOrderStatusUpdate(order.id, value);
-                        }}
-                      >
-                        <SelectTrigger className="w-[120px]">
-                          <SelectValue placeholder="Update" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="PENDING">Pending</SelectItem>
-                          <SelectItem value="PAID">Paid</SelectItem>
-                          <SelectItem value="FAILED">Failed</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <div className="flex items-center gap-2">
+                        <Select
+                          value={orderStatuses[order.id] || order.status}
+                          onValueChange={(value: OrderStatus) => {
+                            handleOrderStatusUpdate(order.id, value);
+                          }}
+                        >
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue placeholder="Update" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PENDING">Pending</SelectItem>
+                            <SelectItem value="PAID">Paid</SelectItem>
+                            <SelectItem value="FAILED">Failed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="whitespace-nowrap min-w-[80px]">
+                              View Details
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[800px] w-[90vw]">
+                            <DialogHeader>
+                              <DialogTitle>Order Details</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-6">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-3">
+                                  <h3 className="font-semibold text-lg">Customer Information</h3>
+                                  <div className="space-y-2">
+                                    <p><span className="font-medium">Name:</span> {order.first_name} {order.last_name}</p>
+                                    <p className="break-all"><span className="font-medium">Email:</span> {order.email}</p>
+                                    <p><span className="font-medium">Phone:</span> {order.phone}</p>
+                                  </div>
+                                </div>
+                                <div className="space-y-3">
+                                  <h3 className="font-semibold text-lg">Shipping Address</h3>
+                                  <div className="space-y-2">
+                                    <p className="break-words">{order.address}</p>
+                                    <p>{order.city}, {order.state} {order.zip}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-lg mb-3">Order Items</h3>
+                                <div className="space-y-3">
+                                  {order.items.map((item, index) => (
+                                    <div key={index} className="flex justify-between items-center border-b pb-2">
+                                      <div>
+                                        <p className="font-medium">{item.product.name}</p>
+                                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                                      </div>
+                                      <p>{formatPrice(item.product.price * item.quantity)}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="border-t pt-4">
+                                <div className="flex justify-between font-bold text-lg">
+                                  <span>Total Amount:</span>
+                                  <span>{formatPrice(order.totalAmount)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
                     </td>
                   </tr>
                 ))}

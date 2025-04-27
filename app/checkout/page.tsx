@@ -115,6 +115,14 @@ export default function CheckoutPage() {
         })),
         totalAmount: total,
         paymentMethod: paymentMethod,
+        first_name: shippingData.firstName,
+        last_name: shippingData.lastName,
+        email: shippingData.email,
+        phone: shippingData.phone,
+        address: shippingData.address,
+        city: shippingData.city,
+        state: shippingData.state,
+        zip: shippingData.zip,
       });
 
       if (result.error) {

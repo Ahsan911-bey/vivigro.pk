@@ -114,6 +114,14 @@ export async function createOrder(data: {
   }[];
   totalAmount: number;
   paymentMethod: "STRIPE" | "PAYFAST";
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
 }) {
   try {
     const order = await prisma.order.create({
@@ -121,6 +129,14 @@ export async function createOrder(data: {
         userId: data.userId,
         totalAmount: data.totalAmount,
         paymentMethod: data.paymentMethod,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        zip: data.zip,
         items: {
           create: data.items.map((item) => ({
             productId: item.productId,
@@ -128,7 +144,7 @@ export async function createOrder(data: {
             price: item.price,
           })),
         },
-      },
+      } as any,
       include: {
         items: true,
       },

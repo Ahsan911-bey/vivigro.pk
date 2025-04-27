@@ -40,6 +40,16 @@ async function getOrders() {
   return prisma.order.findMany({
     include: {
       user: true,
+      items: {
+        include: {
+          product: {
+            select: {
+              name: true,
+              price: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
