@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Category, OrderStatus, Role } from "@prisma/client";
+import { useToast } from "@/components/ui/use-toast";
 
 // Add formatPrice utility
 const formatPrice = (price: number) => {
@@ -103,6 +104,7 @@ export default function AdminDashboardClient({
 }: AdminDashboardClientProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   // Product Form State
   const [productForm, setProductForm] = useState({
@@ -188,6 +190,39 @@ export default function AdminDashboardClient({
       router.refresh();
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOrderComplete = async (orderId: string) => {
+    if (!confirm("Are you sure you want to mark this order as finished? This will remove the order and update product stock.")) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}/complete`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error);
+      }
+
+      toast({
+        title: "Success",
+        description: "Order marked as finished and stock updated.",
+      });
+
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to complete order",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -579,6 +614,15 @@ export default function AdminDashboardClient({
                             </div>
                           </DialogContent>
                         </Dialog>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="whitespace-nowrap min-w-[80px] bg-green-600 hover:bg-green-700"
+                          onClick={() => handleOrderComplete(order.id)}
+                          disabled={isLoading || order.status !== "PAID"}
+                        >
+                          Order Finished
+                        </Button>
                       </div>
                     </td>
                   </tr>

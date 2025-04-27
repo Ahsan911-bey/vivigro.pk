@@ -14,6 +14,7 @@ import {
   removeFromCart,
   updateCartItemQuantity,
 } from "@/app/actions";
+import { useCart } from "@/contexts/cart-context";
 
 type CartItem = {
   id: string;
@@ -32,6 +33,7 @@ export default function CartPage() {
   const { toast } = useToast();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { updateCartCount } = useCart();
 
   useEffect(() => {
     if (!session?.user?.id) {
@@ -65,6 +67,7 @@ export default function CartPage() {
       setItems(
         items.map((item) => (item.id === id ? { ...item, quantity } : item))
       );
+      await updateCartCount();
     } catch (error) {
       toast({
         title: "Error",
@@ -81,6 +84,7 @@ export default function CartPage() {
         throw new Error(result.error);
       }
       setItems(items.filter((item) => item.id !== id));
+      await updateCartCount();
     } catch (error) {
       toast({
         title: "Error",

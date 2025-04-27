@@ -277,3 +277,55 @@ export async function getAdminDashboardStats(userId: string) {
     return { data: null, error: "Failed to fetch dashboard statistics" };
   }
 }
+
+export async function completeOrder(userId: string, orderId: string) {
+  try {
+    await authorizeAdmin(userId);
+    
+    // Get the order with its items and related products
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
+        }
+      }
+    });
+
+    if (!order) {
+      return { error: "Order not found" };
+    }
+
+    // Start a transaction to update product quantities and delete the order
+    const result = await prisma.$transaction(async (tx) => {
+      // Update product quantities
+      for (const item of order.items) {
+        const newQuantity = item.product.quantity - item.quantity;
+        
+        if (newQuantity < 0) {
+          throw new Error(`Insufficient stock for product: ${item.product.name}`);
+        }
+
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { quantity: newQuantity }
+        });
+      }
+
+      // Delete the order
+      await tx.order.delete({
+        where: { id: orderId }
+      });
+    });
+
+    revalidatePath("/admin");
+    return { data: "Order completed successfully", error: null };
+  } catch (error) {
+    console.error("Error completing order:", error);
+    return { 
+      error: error instanceof Error ? error.message : "Failed to complete order"
+    };
+  }
+}

@@ -9,11 +9,13 @@ import type { Product } from "@/types/product";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/app/actions";
+import { useCart } from "@/contexts/cart-context";
 
 export function ProductCard({ product }: { product: Product }) {
   const { data: session } = useSession();
   const router = useRouter();
   const { toast } = useToast();
+  const { updateCartCount } = useCart();
 
   const handleAddToCart = async () => {
     if (!session?.user?.id) {
@@ -28,6 +30,8 @@ export function ProductCard({ product }: { product: Product }) {
         throw new Error(result.error);
       }
 
+      await updateCartCount();
+      
       toast({
         title: "Added to cart",
         description: `${product.name} has been added to your cart.`,

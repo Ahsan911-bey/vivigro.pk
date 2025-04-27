@@ -16,32 +16,13 @@ import {
 import { Badge } from "./ui/badge";
 import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
-import { getCartItems } from "@/app/actions";
+import { useCart } from "@/contexts/cart-context";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItemsCount, setCartItemsCount] = useState(0);
   const pathname = usePathname();
   const { data: session } = useSession();
-
-  useEffect(() => {
-    async function fetchCartItems() {
-      if (session?.user?.id) {
-        const result = await getCartItems(session.user.id);
-        if (result.data) {
-          const count = result.data.reduce(
-            (total, item) => total + item.quantity,
-            0
-          );
-          setCartItemsCount(count);
-        }
-      } else {
-        setCartItemsCount(0);
-      }
-    }
-
-    fetchCartItems();
-  }, [session]);
+  const { cartCount } = useCart();
 
   const getInitials = (name: string) => {
     return name?.charAt(0)?.toUpperCase() || "U";
@@ -138,9 +119,9 @@ export default function Header() {
             <Button variant="ghost" size="icon" asChild>
               <Link href="/cart" className="relative">
                 <ShoppingCart className="h-5 w-5" />
-                {cartItemsCount > 0 && (
+                {cartCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {cartItemsCount}
+                    {cartCount}
                   </Badge>
                 )}
               </Link>
@@ -213,9 +194,9 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <ShoppingCart className="h-5 w-5" />
-                {cartItemsCount > 0 && (
+                {cartCount > 0 && (
                   <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {cartItemsCount}
+                    {cartCount}
                   </Badge>
                 )}
               </Link>

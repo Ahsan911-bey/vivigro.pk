@@ -8,6 +8,8 @@ import Footer from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import ChatbotButton from "@/components/chatbot/chatbot-button";
 import { Providers } from "./providers";
+import { AuthProvider } from "@/components/auth-provider";
+import { CartProvider } from "@/contexts/cart-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -30,13 +32,17 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <ChatbotButton />
-              <Toaster />
-            </div>
+            <AuthProvider>
+              <CartProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                  <ChatbotButton />
+                  <Toaster />
+                </div>
+              </CartProvider>
+            </AuthProvider>
           </ThemeProvider>
         </Providers>
       </body>
