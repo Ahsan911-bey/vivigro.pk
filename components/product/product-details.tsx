@@ -11,7 +11,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/app/actions";
 import { MessageCircle } from "lucide-react";
-import { useCart } from "@/contexts/cart-context";
 
 export function ProductDetails({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
@@ -19,7 +18,6 @@ export function ProductDetails({ product }: { product: Product }) {
   const { toast } = useToast();
   const { data: session } = useSession();
   const router = useRouter();
-  const { updateCartCount } = useCart();
 
   const isFertilizer = product.category.toUpperCase() === "FERTILIZER";
   const isTextile = product.category.toUpperCase() === "TEXTILE";
@@ -48,7 +46,6 @@ export function ProductDetails({ product }: { product: Product }) {
       if (result.error) {
         throw new Error(result.error);
       }
-      await updateCartCount();
       toast({
         title: "Added to cart",
         description: `${quantity} ${quantity === 1 ? "unit" : "units"} of ${product.name} added to your cart`,

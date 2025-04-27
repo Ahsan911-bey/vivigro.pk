@@ -21,11 +21,10 @@ export function ContactInfo() {
           <div>
             <h3 className="font-medium mb-1">Address</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              123 Business Avenue, Suite 456
-              <br />
-              Karachi, 75000
+              Vivigro, Sahiwal
               <br />
               Pakistan
+              
             </p>
           </div>
         </div>

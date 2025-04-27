@@ -4,9 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
-import type { ProductImage } from "@/types/product";
+import type { Product } from "@/types/product";
 
-export function ProductGallery({ images }: { images: ProductImage[] }) {
+export function ProductGallery({ product }: { product: Product }) {
+  const { images } = product;
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const goToNextImage = () => {
@@ -27,12 +28,22 @@ export function ProductGallery({ images }: { images: ProductImage[] }) {
 
   return (
     <div className="relative aspect-square w-full bg-gray-100 dark:bg-gray-800 rounded-lg">
+     {product.category === "FERTILIZER" && <div>
+      <Image
+        src={images[currentImageIndex].url}
+        alt={`Product image ${currentImageIndex + 1}`}
+        fill
+        className="object-contain rounded-lg"
+      />
+      </div>}
+      {product.category === "TEXTILE" && <div>
       <Image
         src={images[currentImageIndex].url}
         alt={`Product image ${currentImageIndex + 1}`}
         fill
         className="object-cover rounded-lg"
       />
+      </div>}
 
       {images.length > 1 && (
         <>

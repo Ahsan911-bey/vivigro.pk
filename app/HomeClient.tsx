@@ -48,13 +48,27 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
       Vivigro delivers premium fertilizers that enrich your soil and empower your harvests across Pakistan.
     </p>
     <div className="flex flex-wrap justify-center gap-4">
-      <Button asChild size="lg">
-        <Link href="/catalog">Browse Catalog</Link>
-      </Button>
-      <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-black">
-        <Link href="/contact">Contact Us</Link>
-      </Button>
-    </div>
+  <Button
+    asChild
+    size="lg"
+    className="relative overflow-hidden rounded-xl bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold tracking-wide shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300"
+  >
+    <Link href="/catalog" className="relative z-10">
+      Browse Catalog
+    </Link>
+  </Button>
+
+  <Button
+    asChild
+    size="lg"
+    className="relative overflow-hidden rounded-xl border-2 border-neutral-300 dark:border-white/70 bg-white/80 dark:bg-white/10 text-neutral-800 dark:text-white backdrop-blur-md hover:bg-white hover:dark:bg-white/20 transition-all duration-300 shadow-md hover:shadow-lg"
+  >
+    <Link href="/contact" className="relative z-10 font-semibold">
+      Contact Us
+    </Link>
+  </Button>
+</div>
+
   </div>
 </section>
 
@@ -71,12 +85,12 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
           {fertilizers.map((product) => (
             <Card key={product.id} className="overflow-hidden">
               {product.images[0] && (
-                <div className="relative h-48">
+                <div className="relative h-60">
                   <Image
                     src={product.images[0].url}
                     alt={product.name}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </div>
               )}

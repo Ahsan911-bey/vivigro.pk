@@ -27,24 +27,41 @@ export default async function ProductPage({
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-        <ProductGallery images={product.images} />
+        <ProductGallery product={product} />
         <ProductDetails product={product} />
       </div>
 
       {product.videoUrl && (
-        <div className="mb-16">
-          <h2 className="text-2xl font-bold mb-6">Product Video</h2>
-          <div className="aspect-video rounded-lg overflow-hidden">
-            <iframe
-              src={product.videoUrl.replace("watch?v=", "embed/")}
-              title="Product Video"
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
+  <div className="mb-16">
+    <h2 className="text-2xl font-bold mb-6">Product Video</h2>
+
+    {product.videoUrl.includes("facebook.com") ? (
+      <div className="w-full flex justify-center">
+        <iframe
+          src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(product.videoUrl)}&show_text=false&width=400`}
+          title="Facebook Product Video"
+          width="400"
+          height="700"
+          style={{ border: "none", overflow: "hidden" }}
+          scrolling="no"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    ) : (
+      <div className="aspect-video rounded-lg overflow-hidden">
+        <iframe
+          src={product.videoUrl.replace("watch?v=", "embed/")}
+          title="Product Video"
+          className="w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    )}
+  </div>
+)}
 
       <RelatedProducts products={relatedProducts} />
     </div>

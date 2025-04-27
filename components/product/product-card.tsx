@@ -51,12 +51,22 @@ export function ProductCard({ product }: { product: Product }) {
         href={`/catalog/${product.id}`}
         className="block aspect-square relative"
       >
+        {product.category === "FERTILIZER" && <div>
+        <Image
+          src={product.images[0]?.url || "/placeholder.svg"}
+          alt={product.name}
+          fill
+          className="object-contain rounded-t-lg"
+        />
+        </div>}
+        {product.category === "TEXTILE" && <div>
         <Image
           src={product.images[0]?.url || "/placeholder.svg"}
           alt={product.name}
           fill
           className="object-cover rounded-t-lg"
         />
+        </div>}
       </Link>
 
       <div className="p-4">

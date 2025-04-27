@@ -77,7 +77,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
                 <MapPin size={16} className="text-emerald-600" />
-                <span className="text-gray-600 dark:text-gray-300">123 Business Avenue, Karachi, Pakistan</span>
+                <span className="text-gray-600 dark:text-gray-300">Vivigro, Pakistan</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-emerald-600" />

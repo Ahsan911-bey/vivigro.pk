@@ -30,7 +30,7 @@ export default function Header() {
 
   const navLinks = [
     { href: "/", label: "Home" },
-    { href: "/catalog", label: "Catalog" },
+    { href: "/catalog", label: "Products" },
     { href: "/about", label: "About Us" },
     { href: "/contact", label: "Contact" },
   ];
@@ -62,9 +62,20 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-4">
-            <ModeToggle />
+          <ModeToggle />
+          
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/cart" className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                  {cartCount}
+                </Badge>
+              )}
+            </Link>
+          </Button>
 
+          <div className="hidden md:flex items-center gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -115,17 +126,6 @@ export default function Header() {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/cart" className="relative">
-                <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {cartCount}
-                  </Badge>
-                )}
-              </Link>
-            </Button>
           </div>
 
           <Button
@@ -188,19 +188,6 @@ export default function Header() {
                   Login / Register
                 </Link>
               )}
-              <Link
-                href="/cart"
-                className="relative"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <ShoppingCart className="h-5 w-5" />
-                {cartCount > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs">
-                    {cartCount}
-                  </Badge>
-                )}
-              </Link>
-              <ModeToggle />
             </div>
           </nav>
         </div>

@@ -1,16 +1,41 @@
 import { Suspense } from "react";
-import { ProductGrid } from "@/components/product/product-grid";
 import { ProductFilters } from "@/components/product/product-filters";
 import { ProductSearch } from "@/components/product/product-search";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Category } from "@prisma/client";
+import { getProducts } from "@/app/actions";
+import { ProductCard } from "@/components/product/product-card";
 
-export default function CatalogPage({
+export default async function CatalogPage({
   searchParams,
 }: {
   searchParams: { category?: Category; search?: string };
 }) {
   const { category, search } = searchParams;
+  const result = await getProducts();
+  const products = result.data || [];
+
+  // Optionally filter by search
+  let filteredProducts = products;
+  if (search) {
+    const searchLower = search.toLowerCase();
+    filteredProducts = filteredProducts.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchLower) ||
+        product.description.toLowerCase().includes(searchLower)
+    );
+  }
+
+  // Optionally filter by category
+  const showFertilizer = !category || category === "FERTILIZER";
+  const showTextile = !category || category === "TEXTILE";
+
+  const fertilizerProducts = filteredProducts.filter(
+    (product) => product.category === "FERTILIZER"
+  );
+  const textileProducts = filteredProducts.filter(
+    (product) => product.category === "TEXTILE"
+  );
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -26,9 +51,36 @@ export default function CatalogPage({
             <ProductSearch />
           </div>
 
-          <Suspense fallback={<ProductGridSkeleton />}>
-            <ProductGrid category={category} search={search} />
-          </Suspense>
+          <div className="space-y-12">
+            {showFertilizer && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4 text-green-400">Fertilizers</h2>
+                {fertilizerProducts.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {fertilizerProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No fertilizer products found.</p>
+                )}
+              </div>
+            )}
+            {showTextile && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4 text-blue-300">Textile</h2>
+                {textileProducts.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {textileProducts.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">No textile products found.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
