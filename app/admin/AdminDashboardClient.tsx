@@ -160,15 +160,31 @@ export default function AdminDashboardClient({
 
   const handleDeleteProduct = async (productId: string) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
+    
     setIsLoading(true);
     try {
       const response = await fetch(`/api/admin/products/${productId}`, {
         method: "DELETE",
       });
-      if (!response.ok) throw new Error("Failed to delete product");
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to delete product");
+      }
+
+      toast({
+        title: "Success",
+        description: "Product deleted successfully",
+      });
+
       router.refresh();
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete product",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

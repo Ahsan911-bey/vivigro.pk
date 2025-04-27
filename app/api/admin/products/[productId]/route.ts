@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { Session } from "next-auth";
+import { deleteAdminProduct } from "@/app/actions/admin";
+
 export async function DELETE(
   request: Request,
   { params }: { params: { productId: string } }
@@ -14,13 +16,13 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const product = await prisma.product.delete({
-      where: {
-        id: params.productId,
-      },
-    });
+    const result = await deleteAdminProduct(session.user.id, params.productId);
 
-    return NextResponse.json(product);
+    if (result.error) {
+      return new NextResponse(result.error, { status: 400 });
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[ADMIN_PRODUCT_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });

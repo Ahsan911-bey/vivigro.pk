@@ -115,9 +115,26 @@ export async function updateAdminProduct(
 export async function deleteAdminProduct(userId: string, productId: string) {
   try {
     await authorizeAdmin(userId);
-    await prisma.product.delete({
-      where: { id: productId },
+    
+    // Use a transaction to delete images and product
+    await prisma.$transaction(async (tx) => {
+      // First delete all images associated with the product
+      await tx.productImage.deleteMany({
+        where: { productId }
+      });
+      
+      // Update the product to clear the videoUrl
+      await tx.product.update({
+        where: { id: productId },
+        data: { videoUrl: null }
+      });
+      
+      // Then delete the product
+      await tx.product.delete({
+        where: { id: productId }
+      });
     });
+
     revalidatePath("/admin/products");
     revalidatePath("/catalog");
     return { error: null };
