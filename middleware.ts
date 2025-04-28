@@ -3,7 +3,7 @@ import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 
 // Define routes configuration
-const publicRoutes = ["/", "/login", "/register"];
+const publicRoutes = ["/", "/login", "/register", "/aboutus", "/contact"];
 const catalogRoutes = ["/catalog"];
 const adminRoutes = ["/admin"];
 
@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
 
     // Allow public routes and catalog routes
     if (
-      publicRoutes.some((route) => path === route) ||
+      publicRoutes.some((route) => path.startsWith(route)) ||
       catalogRoutes.some((route) => path.startsWith(route))
     ) {
       return NextResponse.next();

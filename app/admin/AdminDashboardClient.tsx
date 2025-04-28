@@ -633,11 +633,11 @@ export default function AdminDashboardClient({
                         <Button
                           variant="default"
                           size="sm"
-                          className="whitespace-nowrap min-w-[80px] bg-green-600 hover:bg-green-700"
+                          className="whitespace-nowrap min-w-[80px] bg-red-600 hover:bg-red-700 text-white"
                           onClick={() => handleOrderComplete(order.id)}
-                          disabled={isLoading || order.status !== "PAID"}
+                          disabled={isLoading || order.status == "PENDING"}
                         >
-                          Order Finished
+                          Remove Order
                         </Button>
                       </div>
                     </td>
