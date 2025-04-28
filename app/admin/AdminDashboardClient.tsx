@@ -249,11 +249,11 @@ export default function AdminDashboardClient({
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 h-12">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="products">Products</TabsTrigger>
-          <TabsTrigger value="orders">Orders</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 h-auto min-h-[48px] gap-1 p-1">
+          <TabsTrigger value="overview" className="px-3 py-2.5 text-xs sm:text-sm whitespace-nowrap">Overview</TabsTrigger>
+          <TabsTrigger value="products" className="px-3 py-2.5 text-xs sm:text-sm whitespace-nowrap">Products</TabsTrigger>
+          <TabsTrigger value="orders" className="px-3 py-2.5 text-xs sm:text-sm whitespace-nowrap">Orders</TabsTrigger>
+          <TabsTrigger value="users" className="px-3 py-2.5 text-xs sm:text-sm whitespace-nowrap">Users</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -293,7 +293,7 @@ export default function AdminDashboardClient({
             <h2 className="text-2xl font-bold">Products</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button>Add New Product</Button>
+                <Button>Add Product</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
