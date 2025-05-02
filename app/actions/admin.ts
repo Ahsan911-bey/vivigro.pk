@@ -295,10 +295,9 @@ export async function getAdminDashboardStats(userId: string) {
   }
 }
 
-export async function completeOrder(userId: string, orderId: string) {
+export async function deleteOrderAndMaybeReduceStock(userId: string, orderId: string, reduceStock: boolean) {
   try {
     await authorizeAdmin(userId);
-    
     // Get the order with its items and related products
     const order = await prisma.order.findUnique({
       where: { id: orderId },
@@ -315,22 +314,20 @@ export async function completeOrder(userId: string, orderId: string) {
       return { error: "Order not found" };
     }
 
-    // Start a transaction to update product quantities and delete the order
-    const result = await prisma.$transaction(async (tx) => {
-      // Update product quantities
-      for (const item of order.items) {
-        const newQuantity = item.product.quantity - item.quantity;
-        
-        if (newQuantity < 0) {
-          throw new Error(`Insufficient stock for product: ${item.product.name}`);
+    // Start a transaction to update product quantities (if needed) and delete the order
+    await prisma.$transaction(async (tx) => {
+      if (reduceStock) {
+        for (const item of order.items) {
+          const newQuantity = item.product.quantity - item.quantity;
+          if (newQuantity < 0) {
+            throw new Error(`Insufficient stock for product: ${item.product.name}`);
+          }
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { quantity: newQuantity }
+          });
         }
-
-        await tx.product.update({
-          where: { id: item.productId },
-          data: { quantity: newQuantity }
-        });
       }
-
       // Delete the order
       await tx.order.delete({
         where: { id: orderId }
@@ -338,11 +335,11 @@ export async function completeOrder(userId: string, orderId: string) {
     });
 
     revalidatePath("/admin");
-    return { data: "Order completed successfully", error: null };
+    return { data: "Order deleted successfully", error: null };
   } catch (error) {
-    console.error("Error completing order:", error);
-    return { 
-      error: error instanceof Error ? error.message : "Failed to complete order"
+    console.error("Error deleting order:", error);
+    return {
+      error: error instanceof Error ? error.message : "Failed to delete order"
     };
   }
 }

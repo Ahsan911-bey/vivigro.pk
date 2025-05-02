@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../auth/[...nextauth]/route";
-import { completeOrder } from "@/app/actions/admin";
+import { deleteOrderAndMaybeReduceStock } from "@/app/actions/admin";
+import { prisma } from "@/lib/prisma";
 import { Session } from "next-auth";
 
 export async function POST(
@@ -15,7 +16,21 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const result = await completeOrder(session.user.id, params.orderId);
+    // Fetch the order to check its status
+    const order = await prisma.order.findUnique({
+      where: { id: params.orderId },
+      select: { status: true }
+    });
+    if (!order) {
+      return new NextResponse("Order not found", { status: 404 });
+    }
+
+    if (order.status === "PENDING") {
+      return new NextResponse("Cannot remove a pending order", { status: 400 });
+    }
+
+    const reduceStock = order.status === "PAID";
+    const result = await deleteOrderAndMaybeReduceStock(session.user.id, params.orderId, reduceStock);
 
     if (result.error) {
       return new NextResponse(result.error, { status: 400 });
