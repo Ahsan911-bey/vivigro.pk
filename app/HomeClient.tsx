@@ -90,7 +90,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
             {fertilizers.map((product) => (
               <Card key={product.id} className="overflow-hidden">
                 {product.images[0] && (
-                  <div className="relative h-60">
+                  <div className="relative h-80">
                     <Image
                       src={product.images[0].url}
                       alt={product.name}
