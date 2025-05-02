@@ -79,7 +79,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
       {/* Fertilizer does NOT show price */}
       {!isFertilizer && (
-        <p className="text-2xl font-bold">${product.price.toFixed(2)}</p>
+        <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p>
       )}
 
       <div className="prose dark:prose-invert">

@@ -143,7 +143,7 @@ export default function CartPage() {
                 <div className="flex flex-col flex-1 items-center md:items-start">
                   <h4 className="font-semibold text-lg md:text-xl">{item.product.name}</h4>
                   <p className="text-primary font-medium text-lg mt-1">
-                    ${item.product.price.toFixed(2)}
+                    PKR {item.product.price.toFixed(2)}
                   </p>
 
                   {/* Quantity Controls */}
@@ -173,7 +173,7 @@ export default function CartPage() {
                   {/* Item Total - Mobile */}
                   <div className="mt-4 md:hidden">
                     <p className="text-lg font-semibold">
-                      Total: ${(item.product.price * item.quantity).toFixed(2)}
+                      Total: PKR {(item.product.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ export default function CartPage() {
                 {/* Right Section - Desktop */}
                 <div className="hidden md:flex flex-col items-end gap-4">
                   <p className="text-xl font-semibold">
-                    ${(item.product.price * item.quantity).toFixed(2)}
+                    PKR {(item.product.price * item.quantity).toFixed(2)}
                   </p>
                   <Button
                     variant="destructive"
@@ -218,7 +218,7 @@ export default function CartPage() {
             <div className="space-y-2 mb-6">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${getTotalPrice().toFixed(2)}</span>
+                <span>PKR {getTotalPrice().toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
@@ -233,7 +233,7 @@ export default function CartPage() {
             <div className="border-t pt-4 mb-6">
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>${getTotalPrice().toFixed(2)}</span>
+                <span>PKR {getTotalPrice().toFixed(2)}</span>
               </div>
             </div>
 

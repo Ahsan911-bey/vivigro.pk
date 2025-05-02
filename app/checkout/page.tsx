@@ -322,7 +322,7 @@ export default function CheckoutPage() {
                     </span>
                   </div>
                   <span>
-                    ${(item.product.price * item.quantity).toFixed(2)}
+                    PKR {(item.product.price * item.quantity).toFixed(2)}
                   </span>
                 </div>
               ))}
@@ -331,22 +331,22 @@ export default function CheckoutPage() {
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>PKR {subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>${shipping.toFixed(2)}</span>
+                <span>PKR {shipping.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax (5%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>PKR {tax.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="border-t mt-4 pt-4">
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>${total.toFixed(2)}</span>
+                <span>PKR {total.toFixed(2)}</span>
               </div>
             </div>
           </div>
