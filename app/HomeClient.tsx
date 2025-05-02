@@ -31,7 +31,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
       <section className="relative h-[90vh] w-full flex items-center justify-center">
         {/* Background Image */}
         <Image
-          src="https://videos.openai.com/vg-assets/assets%2Ftask_01jssnwsabenytg91sk4xf4093%2F1745692393_img_0.webp?st=2025-04-26T17%3A25%3A01Z&se=2025-05-02T18%3A25%3A01Z&sks=b&skt=2025-04-26T17%3A25%3A01Z&ske=2025-05-02T18%3A25%3A01Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=cWhVyvfEEW%2BvTG0GWhPtbB0Yfkb1oOiyLg3QCLvBKak%3D&az=oaivgprodscus"
+          src="https://vivigropk.vercel.app/cover.jpg"
           alt="Vivigro Fertilizers"
           fill
           className="object-cover"
