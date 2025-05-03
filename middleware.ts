@@ -6,6 +6,7 @@ import type { NextRequest } from "next/server";
 const publicRoutes = ["/", "/login", "/register", "/aboutus", "/contact"];
 const catalogRoutes = ["/catalog"];
 const adminRoutes = ["/admin"];
+const protectedRoutes = ["/cart", "/checkout"];
 
 export async function middleware(request: NextRequest) {
   try {

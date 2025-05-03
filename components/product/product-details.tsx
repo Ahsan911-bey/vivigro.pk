@@ -36,7 +36,7 @@ export function ProductDetails({ product }: { product: Product }) {
 
   const handleAddToCart = async () => {
     if (!session?.user) {
-      router.push("/auth/signin?callbackUrl=/catalog");
+      router.push("/login");
       return;
     }
 

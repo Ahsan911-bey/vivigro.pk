@@ -33,7 +33,7 @@ export default function CartPage() {
 
   useEffect(() => {
     if (!session?.user?.id) {
-      router.push("/auth/signin?callbackUrl=/cart");
+      router.push("/login");
       return;
     }
 
