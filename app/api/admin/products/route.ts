@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, description, price, quantity, category, images, videoUrl } = body;
+    const { name, description, price, quantity, category, images, videos } = body;
 
     const product = await prisma.product.create({
       data: {
@@ -22,10 +22,16 @@ export async function POST(request: Request) {
         price: parseFloat(price),
         quantity: parseInt(quantity),
         category,
-        videoUrl,
         images: {
           create: images.map((url: string) => ({ url })),
         },
+        ProductVideo: videos && videos.length > 0 ? {
+          create: videos.map((url: string) => ({ url })),
+        } : undefined,
+      },
+      include: {
+        images: true,
+        ProductVideo: true,
       },
     });
 
@@ -47,6 +53,7 @@ export async function GET(request: Request) {
     const products = await prisma.product.findMany({
       include: {
         images: true,
+        ProductVideo: true,
       },
       orderBy: {
         createdAt: "desc",

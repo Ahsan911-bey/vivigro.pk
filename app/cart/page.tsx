@@ -25,20 +25,28 @@ type CartItem = {
 
 export default function CartPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { toast } = useToast();
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { updateCartCount } = useCart();
 
   useEffect(() => {
-    if (!session?.user?.id) {
+    // Wait for session to be loaded
+    if (status === "loading") {
+      return;
+    }
+
+    // Only redirect if we're sure there's no session
+    if (status === "unauthenticated") {
       router.push("/login");
       return;
     }
 
     async function loadCartItems() {
-      const result = await getCartItems(session?.user?.id || "");
+      if (!session?.user?.id) return;
+      
+      const result = await getCartItems(session.user.id);
       if (result.error) {
         toast({
           title: "Error",
@@ -52,7 +60,7 @@ export default function CartPage() {
     }
 
     loadCartItems();
-  }, [session, router, toast]);
+  }, [session, status, router, toast]);
 
   const handleUpdateQuantity = async (id: string, quantity: number) => {
     try {

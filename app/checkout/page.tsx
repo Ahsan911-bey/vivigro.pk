@@ -96,7 +96,6 @@ export default function CheckoutPage() {
       address: formData.get("address") as string,
       city: formData.get("city") as string,
       state: formData.get("state") as string,
-      zip: formData.get("zip") as string,
     };
 
     const subtotal = getTotalPrice();
@@ -122,7 +121,6 @@ export default function CheckoutPage() {
         address: shippingData.address,
         city: shippingData.city,
         state: shippingData.state,
-        zip: shippingData.zip,
       });
 
       if (result.error) {
@@ -219,11 +217,6 @@ export default function CheckoutPage() {
                   <div className="space-y-2">
                     <Label htmlFor="state">State/Province</Label>
                     <Input name="state" id="state" required />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="zip">Postal Code</Label>
-                    <Input name="zip" id="zip" required />
                   </div>
                 </div>
               </div>

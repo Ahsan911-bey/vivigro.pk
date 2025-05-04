@@ -3,6 +3,8 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductDetails } from "@/components/product/product-details";
 import { RelatedProducts } from "@/components/product/related-products";
 import { getProductById, getProducts } from "@/app/actions";
+import type { Product } from "@/types/product";
+import ProductVideoCarousel from "@/components/product/product-video-carousel";
 
 export default async function ProductPage({
   params,
@@ -21,7 +23,7 @@ export default async function ProductPage({
   const allProductsResult = await getProducts();
   const relatedProducts =
     allProductsResult.data
-      ?.filter((p) => p.category === product.category && p.id !== product.id)
+      ?.filter((p: Product) => p.category === product.category && p.id !== product.id)
       .slice(0, 4) || [];
 
   return (
@@ -31,37 +33,9 @@ export default async function ProductPage({
         <ProductDetails product={product} />
       </div>
 
-      {product.videoUrl && (
-  <div className="mb-16">
-    <h2 className="text-2xl font-bold mb-6">Product Video</h2>
-
-    {product.videoUrl.includes("facebook.com") ? (
-      <div className="w-full flex justify-center">
-        <iframe
-          src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(product.videoUrl)}&show_text=false&width=400`}
-          title="Facebook Product Video"
-          width="400"
-          height="700"
-          style={{ border: "none", overflow: "hidden" }}
-          scrolling="no"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    ) : (
-      <div className="aspect-video rounded-lg overflow-hidden">
-        <iframe
-          src={product.videoUrl.replace("watch?v=", "embed/")}
-          title="Product Video"
-          className="w-full h-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    )}
-  </div>
-)}
+      {product.videos && product.videos.length > 0 && (
+        <ProductVideoCarousel videos={product.videos} />
+      )}
 
       <RelatedProducts products={relatedProducts} />
     </div>

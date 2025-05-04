@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { DollarSign, Package, ShoppingCart, Users } from "lucide-react";
+import { DollarSign, Package, ShoppingCart, Users, CheckCircle2, Clock, XCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Category, OrderStatus, Role } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
+
+// Define string literal types for client-side usage
+export type Category = "TEXTILE" | "FERTILIZER";
+export type OrderStatus = "PENDING" | "COMPLETED" | "FAILED";
+export type Role = "USER" | "ADMIN";
 
 // Add formatPrice utility
 const formatPrice = (price: number) => {
@@ -44,6 +48,9 @@ interface AdminDashboardClientProps {
     totalOrders: number;
     totalProducts: number;
     totalCustomers: number;
+    completedOrders: number;
+    failedOrders: number;
+    pendingOrders: number;
   };
   products: {
     id: string;
@@ -72,7 +79,6 @@ interface AdminDashboardClientProps {
     address: string;
     city: string;
     state: string;
-    zip: string;
     items: {
       id: string;
       productId: string;
@@ -116,7 +122,7 @@ export default function AdminDashboardClient({
     quantity: "",
     category: "TEXTILE" as Category,
     images: [] as string[],
-    videoUrl: "",
+    videos: [] as string[],
   });
 
   // Order Status Update State
@@ -136,7 +142,7 @@ export default function AdminDashboardClient({
       quantity: "",
       category: "TEXTILE" as Category,
       images: [],
-      videoUrl: "",
+      videos: [],
     });
   };
 
@@ -148,7 +154,11 @@ export default function AdminDashboardClient({
       const response = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productForm),
+        body: JSON.stringify({
+          ...productForm,
+          images: productForm.images,
+          videos: productForm.videos,
+        }),
       });
       if (!response.ok) throw new Error("Failed to create product");
       router.refresh();
@@ -268,12 +278,26 @@ export default function AdminDashboardClient({
               color="blue"
               formatter={formatPrice}
             />
-            <StatsCard
-              title="Total Orders"
-              value={stats.totalOrders}
-              icon={ShoppingCart}
-              color="green"
-            />
+           <Card className="flex items-center gap-4 p-6">
+              <ShoppingCart className="h-10 w-10 text-green-500 bg-green-100 rounded-full p-2" />
+              <div className="w-full">
+                <div className="text-muted-foreground text-sm">Total Orders</div>
+                <div className="flex items-center justify-between w-full mt-2">
+                  <div className="text-2xl font-bold">{stats.totalOrders}</div>
+                  <div className="flex gap-2 items-center">
+                    <span className="flex items-center text-green-600 text-sm font-semibold">
+                      <CheckCircle2 className="h-4 w-4 mr-1" /> {stats.completedOrders}
+                    </span>
+                    <span className="flex items-center text-yellow-600 text-sm font-semibold">
+                      <Clock className="h-4 w-4 mr-1" /> {stats.pendingOrders}
+                    </span>
+                    <span className="flex items-center text-red-600 text-sm font-semibold">
+                      <XCircle className="h-4 w-4 mr-1" /> {stats.failedOrders}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </Card>
             <StatsCard
               title="Total Products"
               value={stats.totalProducts}
@@ -374,22 +398,6 @@ export default function AdminDashboardClient({
                     </Select>
                   </div>
 
-                  {/* Video URL input */}
-                  <div className="space-y-2">
-                    <Label htmlFor="videoUrl">Video URL</Label>
-                    <Input
-                      id="videoUrl"
-                      type="text"
-                      value={productForm.videoUrl}
-                      onChange={(e) =>
-                        setProductForm({
-                          ...productForm,
-                          videoUrl: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-
                   {/* Images input (multiple URLs) */}
                   <div className="space-y-2">
                     <Label>Image URLs</Label>
@@ -428,6 +436,47 @@ export default function AdminDashboardClient({
                       }
                     >
                       Add Image URL
+                    </Button>
+                  </div>
+
+                  {/* Video URLs input (multiple URLs) */}
+                  <div className="space-y-2">
+                    <Label>Video URLs</Label>
+                    {productForm.videos.map((url, idx) => (
+                      <div key={idx} className="flex gap-2 mb-2">
+                        <Input
+                          type="text"
+                          value={url}
+                          onChange={(e) => {
+                            const newVideos = [...productForm.videos];
+                            newVideos[idx] = e.target.value;
+                            setProductForm({ ...productForm, videos: newVideos });
+                          }}
+                          placeholder={`Video URL #${idx + 1}`}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          onClick={() => {
+                            const newVideos = productForm.videos.filter((_, i) => i !== idx);
+                            setProductForm({ ...productForm, videos: newVideos });
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() =>
+                        setProductForm({
+                          ...productForm,
+                          videos: [...productForm.videos, ""],
+                        })
+                      }
+                    >
+                      Add Video URL
                     </Button>
                   </div>
 
@@ -551,7 +600,7 @@ export default function AdminDashboardClient({
                     <td className="px-4 py-2">
                       <Badge
                         className={
-                          order.status === "PAID"
+                          order.status === "COMPLETED"
                             ? "bg-green-100 text-green-800"
                             : order.status === "PENDING"
                             ? "bg-yellow-100 text-yellow-800"
@@ -577,7 +626,7 @@ export default function AdminDashboardClient({
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="PENDING">Pending</SelectItem>
-                            <SelectItem value="PAID">Paid</SelectItem>
+                            <SelectItem value="COMPLETED">Completed</SelectItem>
                             <SelectItem value="FAILED">Failed</SelectItem>
                           </SelectContent>
                         </Select>
@@ -605,7 +654,7 @@ export default function AdminDashboardClient({
                                   <h3 className="font-semibold text-lg">Shipping Address</h3>
                                   <div className="space-y-2">
                                     <p className="break-words">{order.address}</p>
-                                    <p>{order.city}, {order.state} {order.zip}</p>
+                                    <p>{order.city}, {order.state}</p>
                                   </div>
                                 </div>
                               </div>
@@ -637,7 +686,7 @@ export default function AdminDashboardClient({
                           size="sm"
                           className="whitespace-nowrap min-w-[80px] bg-red-600 hover:bg-red-700 text-white"
                           onClick={() => handleOrderComplete(order.id)}
-                          disabled={isLoading || order.status == "PENDING"}
+                          disabled={isLoading || order.status === "PENDING"}
                         >
                           Remove Order
                         </Button>

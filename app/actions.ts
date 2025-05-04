@@ -9,9 +9,15 @@ export async function getProducts() {
     const products = await prisma.product.findMany({
       include: {
         images: true,
+        ProductVideo: true,
       },
     });
-    return { data: products, error: null };
+    // Map ProductVideo to videos for frontend compatibility
+    const mappedProducts = products.map((product: any) => ({
+      ...product,
+      videos: product.ProductVideo,
+    }));
+    return { data: mappedProducts, error: null };
   } catch (error) {
     console.error("Error fetching products:", error);
     return { data: null, error: "Failed to fetch products" };
@@ -25,9 +31,14 @@ export async function getProductById(id: string) {
       where: { id },
       include: {
         images: true,
+        ProductVideo: true,
       },
     });
-    return { data: product, error: null };
+    // Map ProductVideo to videos for frontend compatibility
+    const mappedProduct = product
+      ? { ...product, videos: product.ProductVideo }
+      : null;
+    return { data: mappedProduct, error: null };
   } catch (error) {
     console.error("Error fetching product:", error);
     return { data: null, error: "Failed to fetch product" };
@@ -121,7 +132,6 @@ export async function createOrder(data: {
   address: string;
   city: string;
   state: string;
-  zip: string;
 }) {
   try {
     const order = await prisma.order.create({
@@ -136,7 +146,6 @@ export async function createOrder(data: {
         address: data.address,
         city: data.city,
         state: data.state,
-        zip: data.zip,
         items: {
           create: data.items.map((item) => ({
             productId: item.productId,
@@ -286,5 +295,18 @@ export async function clearCart(userId: string) {
   } catch (error) {
     console.error("Error clearing cart:", error);
     return { error: "Failed to clear cart" };
+  }
+}
+
+export async function updateOrderStatus(orderId: string, status: "COMPLETED" | "FAILED") {
+  try {
+    const order = await prisma.order.update({
+      where: { id: orderId },
+      data: { orderStatus: status },
+    });
+    return { data: order, error: null };
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    return { data: null, error: "Failed to update order status" };
   }
 }

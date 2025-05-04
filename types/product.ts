@@ -1,6 +1,12 @@
-import { Category } from "@prisma/client";
+// export type Category = "TEXTILE" | "FERTILIZER";
 
 export type ProductImage = {
+  id: string;
+  url: string;
+  productId: string;
+};
+
+export type ProductVideo = {
   id: string;
   url: string;
   productId: string;
@@ -12,9 +18,10 @@ export type Product = {
   description: string;
   price: number;
   quantity: number;
-  category: Category;
+  category: "TEXTILE" | "FERTILIZER";
   videoUrl?: string | null;
   images: ProductImage[];
+  videos?: ProductVideo[];
   createdAt: Date;
   updatedAt: Date;
 };

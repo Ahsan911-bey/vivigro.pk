@@ -2,25 +2,25 @@ import { Suspense } from "react";
 import { ProductFilters } from "@/components/product/product-filters";
 import { ProductSearch } from "@/components/product/product-search";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Category } from "@prisma/client";
+import type { Product } from "@/types/product";
 import { getProducts } from "@/app/actions";
 import { ProductCard } from "@/components/product/product-card";
 
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: { category?: Category; search?: string };
+  searchParams: { category?: string; search?: string };
 }) {
   const { category, search } = searchParams;
   const result = await getProducts();
-  const products = result.data || [];
+  const products: Product[] = result.data || [];
 
   // Optionally filter by search
   let filteredProducts = products;
   if (search) {
     const searchLower = search.toLowerCase();
     filteredProducts = filteredProducts.filter(
-      (product) =>
+      (product: Product) =>
         product.name.toLowerCase().includes(searchLower) ||
         product.description.toLowerCase().includes(searchLower)
     );
@@ -31,10 +31,10 @@ export default async function CatalogPage({
   const showTextile = !category || category === "TEXTILE";
 
   const fertilizerProducts = filteredProducts.filter(
-    (product) => product.category === "FERTILIZER"
+    (product: Product) => product.category === "FERTILIZER"
   );
   const textileProducts = filteredProducts.filter(
-    (product) => product.category === "TEXTILE"
+    (product: Product) => product.category === "TEXTILE"
   );
 
   return (
@@ -57,7 +57,7 @@ export default async function CatalogPage({
                 <h2 className="text-2xl font-bold mb-4 text-green-400">Fertilizers</h2>
                 {fertilizerProducts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {fertilizerProducts.map((product) => (
+                    {fertilizerProducts.map((product: Product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>
@@ -71,7 +71,7 @@ export default async function CatalogPage({
                 <h2 className="text-2xl font-bold mb-4 text-blue-300">Textile</h2>
                 {textileProducts.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {textileProducts.map((product) => (
+                    {textileProducts.map((product: Product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>

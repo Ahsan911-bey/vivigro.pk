@@ -2,19 +2,22 @@ import { prisma } from "@/lib/prisma";
 import AdminDashboardClient from "./AdminDashboardClient";
 
 async function getStats() {
-  const [totalRevenue, totalOrders, totalProducts, totalCustomers] =
+  const [totalRevenue, totalOrders, totalProducts, totalCustomers, completedOrders, failedOrders, pendingOrders] =
     await Promise.all([
       prisma.order.aggregate({
         _sum: {
           totalAmount: true,
         },
         where: {
-          status: "PAID",
+          status: "COMPLETED",
         },
       }),
       prisma.order.count(),
       prisma.product.count(),
       prisma.user.count(),
+      prisma.order.count({ where: { status: "COMPLETED" } }),
+      prisma.order.count({ where: { status: "FAILED" } }),
+      prisma.order.count({ where: { status: "PENDING" } }),
     ]);
 
   return {
@@ -22,6 +25,9 @@ async function getStats() {
     totalOrders,
     totalProducts,
     totalCustomers,
+    completedOrders,
+    failedOrders,
+    pendingOrders,
   };
 }
 
@@ -37,9 +43,27 @@ async function getProducts() {
 }
 
 async function getOrders() {
-  return prisma.order.findMany({
-    include: {
-      user: true,
+  const orders = await prisma.order.findMany({
+    select: {
+      id: true,
+      totalAmount: true,
+      status: true,
+      createdAt: true,
+      first_name: true,
+      last_name: true,
+      email: true,
+      phone: true,
+      address: true,
+      city: true,
+      state: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      },
       items: {
         include: {
           product: {
@@ -55,6 +79,8 @@ async function getOrders() {
       createdAt: "desc",
     },
   });
+
+  return orders;
 }
 
 async function getUsers() {

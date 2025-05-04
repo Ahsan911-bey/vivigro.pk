@@ -7,15 +7,15 @@ import { Button } from "../ui/button";
 import type { Product } from "@/types/product";
 
 export function ProductGallery({ product }: { product: Product }) {
-  const { images } = product;
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { images = [], category } = product;
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const goToNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
   };
 
-  const goToPreviousImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   if (!images.length) {
@@ -28,22 +28,16 @@ export function ProductGallery({ product }: { product: Product }) {
 
   return (
     <div className="relative aspect-square w-full bg-gray-100 dark:bg-gray-800 rounded-lg">
-     {product.category === "FERTILIZER" && <div>
       <Image
-        src={images[currentImageIndex].url}
-        alt={`Product image ${currentImageIndex + 1}`}
+        src={images[currentIndex].url}
+        alt={`Product image ${currentIndex + 1}`}
         fill
-        className="object-contain rounded-lg"
+        className={
+          category === "FERTILIZER"
+            ? "object-contain rounded-lg"
+            : "object-cover rounded-lg"
+        }
       />
-      </div>}
-      {product.category === "TEXTILE" && <div>
-      <Image
-        src={images[currentImageIndex].url}
-        alt={`Product image ${currentImageIndex + 1}`}
-        fill
-        className="object-cover rounded-lg"
-      />
-      </div>}
 
       {images.length > 1 && (
         <>
@@ -51,7 +45,7 @@ export function ProductGallery({ product }: { product: Product }) {
             variant="ghost"
             size="icon"
             className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-950/80 hover:bg-white/90 dark:hover:bg-gray-950/90"
-            onClick={goToPreviousImage}
+            onClick={goToPrevious}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -59,7 +53,7 @@ export function ProductGallery({ product }: { product: Product }) {
             variant="ghost"
             size="icon"
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-950/80 hover:bg-white/90 dark:hover:bg-gray-950/90"
-            onClick={goToNextImage}
+            onClick={goToNext}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -69,11 +63,11 @@ export function ProductGallery({ product }: { product: Product }) {
               <button
                 key={index}
                 className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentImageIndex
+                  index === currentIndex
                     ? "bg-emerald-600"
                     : "bg-gray-300 dark:bg-gray-600"
                 }`}
-                onClick={() => setCurrentImageIndex(index)}
+                onClick={() => setCurrentIndex(index)}
               />
             ))}
           </div>
