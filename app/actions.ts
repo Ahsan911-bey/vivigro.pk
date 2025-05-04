@@ -182,6 +182,19 @@ export async function addToCart(
   quantity: number
 ) {
   try {
+    // First check if the product exists and has enough stock
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    if (!product) {
+      return { data: null, error: "Product not found" };
+    }
+
+    if (product.quantity < quantity) {
+      return { data: null, error: "Not enough stock available" };
+    }
+
     const existingItem = await prisma.cartItem.findFirst({
       where: {
         userId,
@@ -190,6 +203,11 @@ export async function addToCart(
     });
 
     if (existingItem) {
+      // Check if adding the new quantity would exceed stock
+      if (product.quantity < existingItem.quantity + quantity) {
+        return { data: null, error: "Not enough stock available" };
+      }
+
       const updatedItem = await prisma.cartItem.update({
         where: { id: existingItem.id },
         data: {

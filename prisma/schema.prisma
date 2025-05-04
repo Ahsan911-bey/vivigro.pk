@@ -65,7 +65,6 @@ model Order {
   address       String?
   city          String?
   state         String?
-  zip           String?
   user          User          @relation(fields: [userId], references: [id])
   items         OrderItem[]
 }
