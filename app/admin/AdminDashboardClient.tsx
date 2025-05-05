@@ -686,7 +686,7 @@ export default function AdminDashboardClient({
                           size="sm"
                           className="whitespace-nowrap min-w-[80px] bg-red-600 hover:bg-red-700 text-white"
                           onClick={() => handleOrderComplete(order.id)}
-                          disabled={isLoading || order.status === "PENDING"}
+                          disabled={isLoading || order.status === "PENDING" || order.status === "COMPLETED"}
                         >
                           Remove Order
                         </Button>
