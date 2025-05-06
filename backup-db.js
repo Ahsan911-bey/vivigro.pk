@@ -23,26 +23,46 @@ async function backupDatabase() {
       orders,
       orderItems,
       cartItems,
-      productImages
+      productImages,
+      productVideos
     ] = await Promise.all([
       prisma.user.findMany(),
       prisma.product.findMany(),
-      prisma.order.findMany(),
-      prisma.orderItem.findMany(),
-      prisma.cartItem.findMany(),
-      prisma.productImage.findMany()
+      prisma.order.findMany({
+        include: {
+          items: true,
+          user: true
+        }
+      }),
+      prisma.orderItem.findMany({
+        include: {
+          product: true
+        }
+      }),
+      prisma.cartItem.findMany({
+        include: {
+          product: true
+        }
+      }),
+      prisma.productImage.findMany(),
+      prisma.productVideo.findMany()
     ]);
 
     // Create backup object
     const backup = {
       timestamp: new Date().toISOString(),
+      schema: {
+        version: '1.0',
+        includesStockUpdated: true
+      },
       data: {
         users,
         products,
         orders,
         orderItems,
         cartItems,
-        productImages
+        productImages,
+        productVideos
       }
     };
 

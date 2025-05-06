@@ -126,6 +126,18 @@ export default function AdminDashboardClient({
     videos: [] as string[],
   });
 
+  // Add state for editing
+  const [editingProduct, setEditingProduct] = useState<{
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    category: Category;
+    images: { url: string }[];
+    videos: { url: string }[];
+  } | null>(null);
+
   // Order Status Update State
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "">("");
 
@@ -145,6 +157,7 @@ export default function AdminDashboardClient({
       images: [],
       videos: [],
     });
+    setEditingProduct(null);
   };
 
   // Handlers
@@ -152,8 +165,12 @@ export default function AdminDashboardClient({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch("/api/admin/products", {
-        method: "POST",
+      const url = editingProduct 
+        ? `/api/admin/products/${editingProduct.id}`
+        : "/api/admin/products";
+      
+      const response = await fetch(url, {
+        method: editingProduct ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...productForm,
@@ -161,14 +178,36 @@ export default function AdminDashboardClient({
           videos: productForm.videos,
         }),
       });
-      if (!response.ok) throw new Error("Failed to create product");
+      if (!response.ok) throw new Error(editingProduct ? "Failed to update product" : "Failed to create product");
       router.refresh();
       resetProductForm();
+      toast({
+        title: "Success",
+        description: editingProduct ? "Product updated successfully" : "Product created successfully",
+      });
     } catch (error) {
       console.error(error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleEditProduct = (product: any) => {
+    setEditingProduct(product);
+    setProductForm({
+      name: product.name,
+      description: product.description,
+      price: product.price.toString(),
+      quantity: product.quantity.toString(),
+      category: product.category,
+      images: product.images.map((img: any) => img.url),
+      videos: product.videos?.map((vid: any) => vid.url) || [],
+    });
   };
 
   const handleDeleteProduct = async (productId: string) => {
@@ -346,11 +385,11 @@ export default function AdminDashboardClient({
             <h2 className="text-2xl font-bold">Products</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button>Add Product</Button>
+                <Button>{editingProduct ? "Edit Product" : "Add Product"}</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Add New Product</DialogTitle>
+                  <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleProductSubmit} className="space-y-4">
                   <div className="space-y-2">
@@ -508,8 +547,19 @@ export default function AdminDashboardClient({
                   </div>
 
                   <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Creating..." : "Create Product"}
+                    {isLoading 
+                      ? (editingProduct ? "Updating..." : "Creating...") 
+                      : (editingProduct ? "Update Product" : "Create Product")}
                   </Button>
+                  {editingProduct && (
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      onClick={resetProductForm}
+                    >
+                      Cancel Edit
+                    </Button>
+                  )}
                 </form>
               </DialogContent>
             </Dialog>
@@ -544,13 +594,22 @@ export default function AdminDashboardClient({
             </div>
             <div className="mt-2 flex justify-between items-center">
               <p className="text-sm">Stock: {product.quantity}</p>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDeleteProduct(product.id)}
-              >
-                Delete
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDeleteProduct(product.id)}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           </Card>
         ))}
@@ -585,13 +644,22 @@ export default function AdminDashboardClient({
             </div>
             <div className="mt-2 flex justify-between items-center">
               <p className="text-sm">Stock: {product.quantity}</p>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDeleteProduct(product.id)}
-              >
-                Delete
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => handleEditProduct(product)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDeleteProduct(product.id)}
+                >
+                  Delete
+                </Button>
+              </div>
             </div>
           </Card>
         ))}

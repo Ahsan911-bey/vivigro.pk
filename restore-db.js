@@ -8,13 +8,19 @@ async function restoreDatabase(backupFile) {
   try {
     // Read backup file
     const backup = JSON.parse(fs.readFileSync(backupFile, 'utf8'));
-    const { data } = backup;
+    const { data, schema } = backup;
+
+    // Verify schema version
+    if (!schema || !schema.includesStockUpdated) {
+      console.warn('Warning: Backup file does not include stock_updated field. Some data may be lost.');
+    }
 
     // Clear existing data
     await prisma.$transaction([
       prisma.cartItem.deleteMany(),
       prisma.orderItem.deleteMany(),
       prisma.order.deleteMany(),
+      prisma.productVideo.deleteMany(),
       prisma.productImage.deleteMany(),
       prisma.product.deleteMany(),
       prisma.user.deleteMany(),
@@ -24,19 +30,39 @@ async function restoreDatabase(backupFile) {
     await prisma.$transaction([
       // First restore users
       ...data.users.map(user => 
-        prisma.user.create({ data: user })
+        prisma.user.create({ 
+          data: {
+            ...user,
+            role: user.role || 'USER' // Ensure role is set
+          }
+        })
       ),
       // Then products
       ...data.products.map(product => 
-        prisma.product.create({ data: product })
+        prisma.product.create({ 
+          data: {
+            ...product,
+            category: product.category || 'TEXTILE' // Ensure category is set
+          }
+        })
       ),
       // Then product images
       ...data.productImages.map(image => 
         prisma.productImage.create({ data: image })
       ),
+      // Then product videos
+      ...data.productVideos.map(video => 
+        prisma.productVideo.create({ data: video })
+      ),
       // Then orders
       ...data.orders.map(order => 
-        prisma.order.create({ data: order })
+        prisma.order.create({ 
+          data: {
+            ...order,
+            stock_updated: order.stock_updated || false, // Ensure stock_updated is set
+            status: order.status || 'PENDING' // Ensure status is set
+          }
+        })
       ),
       // Then order items
       ...data.orderItems.map(item => 
