@@ -352,6 +352,9 @@ export async function updateStockForOrder(orderId: string) {
     if (order.status !== "COMPLETED") {
       return { error: "Stock can only be updated for COMPLETED orders." };
     }
+    if (order.stock_updated) {
+      return { error: "Stock has already been updated for this order." };
+    }
     // Check for negative stock
     for (const item of order.items) {
       if (item.product.quantity < item.quantity) {
@@ -366,6 +369,11 @@ export async function updateStockForOrder(orderId: string) {
           data: { quantity: item.product.quantity - item.quantity }
         });
       }
+      // Mark the order as stock updated
+      await tx.order.update({
+        where: { id: orderId },
+        data: { stock_updated: true }
+      });
     });
     revalidatePath("/admin");
     return { data: "Stock updated successfully", error: null };

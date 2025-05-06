@@ -62,7 +62,10 @@ model Order {
   id            String      @id @default(cuid())
   userId        String
   totalAmount   Float
-  paymentMethod String
+  status        OrderStatus @default(PENDING)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  stock_updated Boolean     @default(false)
   first_name    String
   last_name     String
   email         String
@@ -70,12 +73,9 @@ model Order {
   address       String
   city          String
   state         String
-  status        OrderStatus @default(PENDING)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  paymentMethod String
   user          User        @relation(fields: [userId], references: [id])
   items         OrderItem[]
-  stockUpdated  Boolean     @default(false)
 
   @@index([userId])
 }

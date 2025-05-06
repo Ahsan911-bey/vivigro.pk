@@ -56,6 +56,7 @@ async function getOrders() {
       address: true,
       city: true,
       state: true,
+      stock_updated: true,
       user: {
         select: {
           id: true,

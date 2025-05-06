@@ -90,6 +90,7 @@ interface AdminDashboardClientProps {
         price: number;
       };
     }[];
+    stock_updated: boolean;
   }[];
   users: {
     id: string;
@@ -721,9 +722,9 @@ export default function AdminDashboardClient({
                           size="sm"
                           className="whitespace-nowrap min-w-[80px] bg-blue-600 hover:bg-blue-700 text-white"
                           onClick={() => handleUpdateStock(order.id)}
-                          disabled={isLoading || order.status !== "COMPLETED"}
+                          disabled={isLoading || order.status !== "COMPLETED" || order.stock_updated}
                         >
-                          Update Stock
+                          {order.stock_updated ? "Stock Updated" : "Update Stock"}
                         </Button>
                       </div>
                     </td>
