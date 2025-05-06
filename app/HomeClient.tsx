@@ -84,86 +84,96 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
 
         {/* Featured Fertilizers Section */}
         <section className="py-16">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Featured Fertilizers</h2>
-            
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {fertilizers.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
-                {product.images[0] && (
-                  <div className="relative h-80 w-full bg-white">
-                    <Image
-                      src={product.images[0].url}
-                      alt={product.name}
-                      fill
-                      className="object-contain"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-2">
-                    {product.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    {/* <span className="font-bold">{formatPrice(product.price)}</span> */}
-                    <div className="flex justify-center w-4/5 mx-auto">
-                      <Button asChild size="sm" className="w-full">
-                        <Link href={`/catalog/${product.id}`}>View Details</Link>
-                      </Button>
+          {fertilizers.length === 0 ? (
+            <div className="text-center text-gray-500 text-lg py-12">No fertilizer products found.</div>
+          ) : (
+            <>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-bold">Featured Fertilizers</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {fertilizers.map((product) => (
+                  <Card key={product.id} className="overflow-hidden">
+                    {product.images[0] && (
+                      <div className="relative h-80 w-full bg-white">
+                        <Image
+                          src={product.images[0].url}
+                          alt={product.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                      <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+                        {product.description}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        {/* <span className="font-bold">{formatPrice(product.price)}</span> */}
+                        <div className="flex justify-center w-4/5 mx-auto">
+                          <Button asChild size="sm" className="w-full">
+                            <Link href={`/catalog/${product.id}`}>View Details</Link>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-          <div className="flex justify-center">
-          <Button asChild variant="outline" className="mt-10">
-              <Link href="/catalog?category=FERTILIZER">Show All</Link>
-            </Button>
-          </div>
-        
+                  </Card>
+                ))}
+              </div>
+              <div className="flex justify-center">
+                <Button asChild variant="outline" className="mt-10">
+                  <Link href="/catalog?category=FERTILIZER">Show All</Link>
+                </Button>
+              </div>
+            </>
+          )}
         </section>
 
         {/* Featured Textiles Section */}
         <section className="py-16">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Featured Textiles</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {textiles.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
-                {product.images[0] && (
-                  <div className="relative h-48">
-                    <Image
-                      src={product.images[0].url}
-                      alt={product.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                  <p className="text-sm text-gray-500 line-clamp-2 mb-2">
-                    {product.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold">{formatPrice(product.price)}</span>
-                    <Button asChild size="sm">
-                      <Link href={`/catalog/${product.id}`}>View Details</Link>
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-          <div className="flex justify-center">
-            <Button asChild variant="outline" className="mt-10">
-              <Link href="/catalog?category=TEXTILE">Show All</Link>
-            </Button>
-          </div>
+          {textiles.length === 0 ? (
+            <div className="text-center text-gray-500 text-lg py-12">No textile products found.</div>
+          ) : (
+            <>
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-bold">Featured Textiles</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {textiles.map((product) => (
+                  <Card key={product.id} className="overflow-hidden">
+                    {product.images[0] && (
+                      <div className="relative h-48">
+                        <Image
+                          src={product.images[0].url}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                      <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+                        {product.description}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <span className="font-bold">{formatPrice(product.price)}</span>
+                        <Button asChild size="sm">
+                          <Link href={`/catalog/${product.id}`}>View Details</Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+              <div className="flex justify-center">
+                <Button asChild variant="outline" className="mt-10">
+                  <Link href="/catalog?category=TEXTILE">Show All</Link>
+                </Button>
+              </div>
+            </>
+          )}
         </section>
 
         {/* History Snippet */}

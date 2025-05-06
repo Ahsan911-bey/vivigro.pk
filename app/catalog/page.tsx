@@ -54,29 +54,33 @@ export default async function CatalogPage({
           <div className="space-y-12">
             {showFertilizer && (
               <div>
-                <h2 className="text-2xl font-bold mb-4 text-green-400">Fertilizers</h2>
-                {fertilizerProducts.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {fertilizerProducts.map((product: Product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
+                {fertilizerProducts.length === 0 ? (
+                  <div className="text-center text-gray-500 text-lg py-12">No fertilizer products found.</div>
                 ) : (
-                  <p className="text-gray-500">No fertilizer products found.</p>
+                  <>
+                    <h2 className="text-2xl font-bold mb-4 text-green-400">Fertilizers</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {fertilizerProducts.map((product: Product) => (
+                        <ProductCard key={product.id} product={product} />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             )}
             {showTextile && (
               <div>
-                <h2 className="text-2xl font-bold mb-4 text-blue-300">Textile</h2>
-                {textileProducts.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {textileProducts.map((product: Product) => (
-                      <ProductCard key={product.id} product={product} />
-                    ))}
-                  </div>
+                {textileProducts.length === 0 ? (
+                  <div className="text-center text-gray-500 text-lg py-12">No textile products found.</div>
                 ) : (
-                  <p className="text-gray-500">No textile products found.</p>
+                  <>
+                    <h2 className="text-2xl font-bold mb-4 text-blue-300">Textile</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {textileProducts.map((product: Product) => (
+                        <ProductCard key={product.id} product={product} />
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
             )}
