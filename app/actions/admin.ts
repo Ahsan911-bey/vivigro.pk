@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { Category, OrderStatus, PaymentMethod, Role } from "@prisma/client";
+import { Category, OrderStatus, Role } from "@prisma/client";
 
 // Admin authorization middleware
 async function authorizeAdmin(userId: string) {
@@ -316,19 +316,8 @@ export async function deleteOrderAndMaybeReduceStock(userId: string, orderId: st
 
     // Start a transaction to update product quantities (if needed) and delete the order
     await prisma.$transaction(async (tx) => {
-      if (reduceStock) {
-        for (const item of order.items) {
-          const newQuantity = item.product.quantity - item.quantity;
-          if (newQuantity < 0) {
-            throw new Error(`Insufficient stock for product: ${item.product.name}`);
-          }
-          await tx.product.update({
-            where: { id: item.productId },
-            data: { quantity: newQuantity }
-          });
-        }
-      }
-      // Delete the order
+      // Stock decrease logic removed as per new requirements
+      // Only delete the order
       await tx.order.delete({
         where: { id: orderId }
       });
@@ -341,5 +330,47 @@ export async function deleteOrderAndMaybeReduceStock(userId: string, orderId: st
     return {
       error: error instanceof Error ? error.message : "Failed to delete order"
     };
+  }
+}
+
+export async function updateStockForOrder(orderId: string) {
+  try {
+    // Get the order and its items
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
+        },
+      },
+    });
+    if (!order) {
+      return { error: "Order not found" };
+    }
+    if (order.status !== "COMPLETED") {
+      return { error: "Stock can only be updated for COMPLETED orders." };
+    }
+    // Check for negative stock
+    for (const item of order.items) {
+      if (item.product.quantity < item.quantity) {
+        return { error: `Insufficient stock for product: ${item.product.name}` };
+      }
+    }
+    // Update stock in a transaction
+    await prisma.$transaction(async (tx) => {
+      for (const item of order.items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { quantity: item.product.quantity - item.quantity }
+        });
+      }
+    });
+    revalidatePath("/admin");
+    return { data: "Stock updated successfully", error: null };
+  } catch (error) {
+    console.error("Error updating stock for order:", error);
+    return { error: error instanceof Error ? error.message : "Failed to update stock" };
   }
 }

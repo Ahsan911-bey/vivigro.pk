@@ -256,6 +256,32 @@ export default function AdminDashboardClient({
     }
   };
 
+  const handleUpdateStock = async (orderId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error);
+      }
+      toast({
+        title: "Success",
+        description: "Stock updated for this order.",
+      });
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update stock",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
@@ -689,6 +715,15 @@ export default function AdminDashboardClient({
                           disabled={isLoading || order.status === "PENDING" || order.status === "COMPLETED"}
                         >
                           Remove Order
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="whitespace-nowrap min-w-[80px] bg-blue-600 hover:bg-blue-700 text-white"
+                          onClick={() => handleUpdateStock(order.id)}
+                          disabled={isLoading || order.status !== "COMPLETED"}
+                        >
+                          Update Stock
                         </Button>
                       </div>
                     </td>
