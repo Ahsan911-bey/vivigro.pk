@@ -60,6 +60,15 @@ interface AdminDashboardClientProps {
     quantity: number;
     category: Category;
     images: { url: string }[];
+    sizeOptions: string[];
+    packagingType: string | null;
+    type: string | null;
+    reviews: {
+      id: string;
+      reviewerName: string;
+      reviewText: string;
+      starRating: number;
+    }[];
   }[];
   orders: {
     id: string;
@@ -124,6 +133,16 @@ export default function AdminDashboardClient({
     category: "TEXTILE" as Category,
     images: [] as string[],
     videos: [] as string[],
+    sizeOptions: [] as string[],
+    packagingType: "",
+    type: "",
+  });
+
+  // Review Form State
+  const [reviewForm, setReviewForm] = useState({
+    reviewerName: "",
+    reviewText: "",
+    starRating: 5,
   });
 
   // Add state for editing
@@ -136,6 +155,9 @@ export default function AdminDashboardClient({
     category: Category;
     images: { url: string }[];
     videos: { url: string }[];
+    sizeOptions: string[];
+    packagingType: string | null;
+    type: string | null;
   } | null>(null);
 
   // Order Status Update State
@@ -156,8 +178,20 @@ export default function AdminDashboardClient({
       category: "TEXTILE" as Category,
       images: [],
       videos: [],
+      sizeOptions: [],
+      packagingType: "",
+      type: "",
     });
     setEditingProduct(null);
+  };
+
+  // Reset review form
+  const resetReviewForm = () => {
+    setReviewForm({
+      reviewerName: "",
+      reviewText: "",
+      starRating: 5,
+    });
   };
 
   // Handlers
@@ -176,6 +210,9 @@ export default function AdminDashboardClient({
           ...productForm,
           images: productForm.images,
           videos: productForm.videos,
+          sizeOptions: productForm.sizeOptions,
+          packagingType: productForm.packagingType,
+          type: productForm.type,
         }),
       });
       if (!response.ok) throw new Error(editingProduct ? "Failed to update product" : "Failed to create product");
@@ -197,16 +234,100 @@ export default function AdminDashboardClient({
     }
   };
 
+  const handleAddReview = async (productId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/products/${productId}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(reviewForm),
+      });
+
+      if (!response.ok) throw new Error("Failed to add review");
+
+      router.refresh();
+      resetReviewForm();
+      toast({
+        title: "Success",
+        description: "Review added successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to add review",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteReview = async (productId: string, reviewId: string) => {
+    if (!confirm("Are you sure you want to delete this review?")) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/products/${productId}/reviews/${reviewId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) throw new Error("Failed to delete review");
+
+      router.refresh();
+      toast({
+        title: "Success",
+        description: "Review deleted successfully",
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete review",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteAllReviews = async (productId: string) => {
+    if (!confirm("Are you sure you want to delete ALL reviews for this product?")) return;
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/admin/products/${productId}/reviews`, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Failed to delete all reviews");
+      router.refresh();
+      toast({
+        title: "Success",
+        description: "All reviews deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete all reviews",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleEditProduct = (product: any) => {
     setEditingProduct(product);
     setProductForm({
       name: product.name,
       description: product.description,
-      price: product.price.toString(),
-      quantity: product.quantity.toString(),
+      price: product.price,
+      quantity: product.quantity,
       category: product.category,
       images: product.images.map((img: any) => img.url),
       videos: product.videos?.map((vid: any) => vid.url) || [],
+      sizeOptions: product.sizeOptions,
+      packagingType: product.packagingType,
+      type: product.type,
     });
   };
 
@@ -385,86 +506,103 @@ export default function AdminDashboardClient({
             <h2 className="text-2xl font-bold">Products</h2>
             <Dialog>
               <DialogTrigger asChild>
-                <Button>{editingProduct ? "Edit Product" : "Add Product"}</Button>
+                <Button>Add Product</Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>{editingProduct ? "Edit Product" : "Add New Product"}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleProductSubmit} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                      id="name"
-                      value={productForm.name}
-                      onChange={(e) =>
-                        setProductForm({ ...productForm, name: e.target.value })
-                      }
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input
+                        id="name"
+                        value={productForm.name}
+                        onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="price">Price</Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        step="0.01"
+                        value={productForm.price}
+                        onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                        required
+                      />
+                    </div>
                   </div>
-
                   <div className="space-y-2">
                     <Label htmlFor="description">Description</Label>
                     <Textarea
                       id="description"
                       value={productForm.description}
-                      onChange={(e) =>
-                        setProductForm({
-                          ...productForm,
-                          description: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+                      required
                     />
                   </div>
-
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="quantity">Quantity</Label>
+                      <Input
+                        id="quantity"
+                        type="number"
+                        value={productForm.quantity}
+                        onChange={(e) => setProductForm({ ...productForm, quantity: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Category</Label>
+                      <Select
+                        value={productForm.category}
+                        onValueChange={(value: Category) => setProductForm({ ...productForm, category: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="TEXTILE">Textile</SelectItem>
+                          <SelectItem value="FERTILIZER">Fertilizer</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                   <div className="space-y-2">
-                    <Label htmlFor="price">Price</Label>
+                    <Label htmlFor="sizeOptions">Size Options (comma-separated)</Label>
                     <Input
-                      id="price"
-                      type="number"
-                      value={productForm.price}
-                      onChange={(e) =>
-                        setProductForm({
-                          ...productForm,
-                          price: e.target.value,
-                        })
-                      }
+                      id="sizeOptions"
+                      value={productForm.sizeOptions.join(", ")}
+                      onChange={(e) => setProductForm({
+                        ...productForm,
+                        sizeOptions: e.target.value.split(",").map(s => s.trim()).filter(Boolean)
+                      })}
+                      placeholder="e.g., 1kg, 5kg, 10kg"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="quantity">Quantity</Label>
-                    <Input
-                      id="quantity"
-                      type="number"
-                      value={productForm.quantity}
-                      onChange={(e) =>
-                        setProductForm({
-                          ...productForm,
-                          quantity: e.target.value,
-                        })
-                      }
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="packagingType">Packaging Type</Label>
+                      <Input
+                        id="packagingType"
+                        value={productForm.packagingType}
+                        onChange={(e) => setProductForm({ ...productForm, packagingType: e.target.value })}
+                        placeholder="e.g., Bag, Bottle, Box"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="type">Type</Label>
+                      <Input
+                        id="type"
+                        value={productForm.type}
+                        onChange={(e) => setProductForm({ ...productForm, type: e.target.value })}
+                        placeholder="e.g., Organic, Chemical, Liquid"
+                      />
+                    </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={productForm.category}
-                      onValueChange={(value: Category) =>
-                        setProductForm({ ...productForm, category: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="TEXTILE">Textile</SelectItem>
-                        <SelectItem value="FERTILIZER">Fertilizer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Images input (multiple URLs) */}
                   <div className="space-y-2">
                     <Label>Image URLs</Label>
                     {productForm.images.map((url, idx) => (
@@ -472,19 +610,23 @@ export default function AdminDashboardClient({
                         <Input
                           type="text"
                           value={url}
-                          onChange={(e) => {
+                          onChange={e => {
                             const newImages = [...productForm.images];
                             newImages[idx] = e.target.value;
                             setProductForm({ ...productForm, images: newImages });
                           }}
-                          placeholder={`Image URL #${idx + 1}`}
+                          placeholder="Enter image URL"
+                          className="flex-1"
                         />
                         <Button
                           type="button"
                           variant="destructive"
+                          size="sm"
                           onClick={() => {
-                            const newImages = productForm.images.filter((_, i) => i !== idx);
-                            setProductForm({ ...productForm, images: newImages });
+                            setProductForm({
+                              ...productForm,
+                              images: productForm.images.filter((_, i) => i !== idx),
+                            });
                           }}
                         >
                           Remove
@@ -493,19 +635,13 @@ export default function AdminDashboardClient({
                     ))}
                     <Button
                       type="button"
-                      variant="secondary"
-                      onClick={() =>
-                        setProductForm({
-                          ...productForm,
-                          images: [...productForm.images, ""],
-                        })
-                      }
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setProductForm({ ...productForm, images: [...productForm.images, ""] })}
                     >
                       Add Image URL
                     </Button>
                   </div>
-
-                  {/* Video URLs input (multiple URLs) */}
                   <div className="space-y-2">
                     <Label>Video URLs</Label>
                     {productForm.videos.map((url, idx) => (
@@ -513,19 +649,23 @@ export default function AdminDashboardClient({
                         <Input
                           type="text"
                           value={url}
-                          onChange={(e) => {
+                          onChange={e => {
                             const newVideos = [...productForm.videos];
                             newVideos[idx] = e.target.value;
                             setProductForm({ ...productForm, videos: newVideos });
                           }}
-                          placeholder={`Video URL #${idx + 1}`}
+                          placeholder="Enter video URL"
+                          className="flex-1"
                         />
                         <Button
                           type="button"
                           variant="destructive"
+                          size="sm"
                           onClick={() => {
-                            const newVideos = productForm.videos.filter((_, i) => i !== idx);
-                            setProductForm({ ...productForm, videos: newVideos });
+                            setProductForm({
+                              ...productForm,
+                              videos: productForm.videos.filter((_, i) => i !== idx),
+                            });
                           }}
                         >
                           Remove
@@ -534,139 +674,163 @@ export default function AdminDashboardClient({
                     ))}
                     <Button
                       type="button"
-                      variant="secondary"
-                      onClick={() =>
-                        setProductForm({
-                          ...productForm,
-                          videos: [...productForm.videos, ""],
-                        })
-                      }
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setProductForm({ ...productForm, videos: [...productForm.videos, ""] })}
                     >
                       Add Video URL
                     </Button>
                   </div>
-
                   <Button type="submit" disabled={isLoading}>
-                    {isLoading 
-                      ? (editingProduct ? "Updating..." : "Creating...") 
-                      : (editingProduct ? "Update Product" : "Create Product")}
+                    {isLoading ? "Saving..." : editingProduct ? "Update Product" : "Add Product"}
                   </Button>
-                  {editingProduct && (
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={resetProductForm}
-                    >
-                      Cancel Edit
-                    </Button>
-                  )}
                 </form>
               </DialogContent>
             </Dialog>
           </div>
-          {/* Grouped Product Display */}
-<div className="space-y-10">
-  {/* Fertilizers Section */}
-  <div className="mt-10">
-    <h3 className="text-2xl text-center font-semibold mb-2 text-green-400">Fertilizers</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {products
-        .filter((product) => product.category === "FERTILIZER")
-        .map((product) => (
-          <Card key={product.id} className="p-4">
-            {product.images[0] && (
-              <div className="relative h-48 mb-4">
-                <Image
-                  src={product.images[0].url}
-                  alt={product.name}
-                  fill
-                  className="object-cover rounded-md"
-                />
-              </div>
-            )}
-            <h3 className="font-bold">{product.name}</h3>
-            <p className="text-sm text-gray-500 line-clamp-2">
-              {product.description}
-            </p>
-            <div className="mt-2 flex justify-between items-center">
-              <p className="font-bold">{formatPrice(product.price)}</p>
-              <Badge>{product.category}</Badge>
-            </div>
-            <div className="mt-2 flex justify-between items-center">
-              <p className="text-sm">Stock: {product.quantity}</p>
-              <div className="flex gap-2">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => handleEditProduct(product)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDeleteProduct(product.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-    </div>
-  </div>
 
-  {/* Textiles Section */}
-  <div>
-    <h3 className="text-2xl text-center font-semibold text-blue-300 mb-2">Textiles</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {products
-        .filter((product) => product.category === "TEXTILE")
-        .map((product) => (
-          <Card key={product.id} className="p-4">
-            {product.images[0] && (
-              <div className="relative h-48 mb-4">
-                <Image
-                  src={product.images[0].url}
-                  alt={product.name}
-                  fill
-                  className="object-cover rounded-md"
-                />
-              </div>
-            )}
-            <h3 className="font-bold">{product.name}</h3>
-            <p className="text-sm text-gray-500 line-clamp-2">
-              {product.description}
-            </p>
-            <div className="mt-2 flex justify-between items-center">
-              <p className="font-bold">{formatPrice(product.price)}</p>
-              <Badge>{product.category}</Badge>
-            </div>
-            <div className="mt-2 flex justify-between items-center">
-              <p className="text-sm">Stock: {product.quantity}</p>
-              <div className="flex gap-2">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => handleEditProduct(product)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => handleDeleteProduct(product.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          </Card>
-        ))}
-    </div>
-  </div>
-</div>
-
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.map((product) => (
+              <Card key={product.id} className="p-4">
+                <div className="space-y-4">
+                  {product.images[0] && (
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={product.images[0].url}
+                        alt={product.name}
+                        fill
+                        className="object-cover rounded-md"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-semibold">{product.name}</h3>
+                    <p className="text-sm text-gray-500">{product.description}</p>
+                    <p className="font-bold mt-2">{formatPrice(product.price)}</p>
+                    <div className="mt-2">
+                      <Badge variant="outline">{product.category}</Badge>
+                      {product.type && <Badge variant="outline" className="ml-2">{product.type}</Badge>}
+                      {product.packagingType && <Badge variant="outline" className="ml-2">{product.packagingType}</Badge>}
+                    </div>
+                    {product.sizeOptions.length > 0 && (
+                      <div className="mt-2">
+                        <p className="text-sm font-medium">Size Options:</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {product.sizeOptions.map((size, index) => (
+                            <Badge key={index} variant="secondary">{size}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <div className="mt-4 space-y-2">
+                      <h4 className="font-medium">Reviews</h4>
+                      
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteAllReviews(product.id)}
+                        disabled={isLoading}
+                        className="mb-2"
+                      >
+                        Remove All Reviews
+                      </Button>
+                      {product.reviews?.map((review) => (
+                        <div key={review.id} className="border rounded p-2">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="font-medium">{review.reviewerName}</p>
+                              <div className="flex items-center mt-1">
+                                {[...Array(5)].map((_, i) => (
+                                  <span key={i} className={i < review.starRating ? "text-yellow-400" : "text-gray-300"}>
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                              <p className="text-sm mt-1">{review.reviewText}</p>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteReview(product.id, review.id)}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">Add Review</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Add Review</DialogTitle>
+                          </DialogHeader>
+                          <form onSubmit={(e) => { e.preventDefault(); handleAddReview(product.id); }} className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="reviewerName">Reviewer Name</Label>
+                              <Input
+                                id="reviewerName"
+                                value={reviewForm.reviewerName}
+                                onChange={(e) => setReviewForm({ ...reviewForm, reviewerName: e.target.value })}
+                                required
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="reviewText">Review Text</Label>
+                              <Textarea
+                                id="reviewText"
+                                value={reviewForm.reviewText}
+                                onChange={(e) => setReviewForm({ ...reviewForm, reviewText: e.target.value })}
+                                required
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="starRating">Star Rating</Label>
+                              <Select
+                                value={reviewForm.starRating.toString()}
+                                onValueChange={(value) => setReviewForm({ ...reviewForm, starRating: parseInt(value) })}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select rating" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {[1, 2, 3, 4, 5].map((rating) => (
+                                    <SelectItem key={rating} value={rating.toString()}>
+                                      {rating} {rating === 1 ? "Star" : "Stars"}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <Button type="submit" disabled={isLoading}>
+                              {isLoading ? "Adding..." : "Add Review"}
+                            </Button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditProduct(product)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteProduct(product.id)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         </TabsContent>
 
         {/* Orders Tab */}

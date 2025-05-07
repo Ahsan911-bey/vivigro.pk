@@ -68,8 +68,10 @@ export function ProductDetails({ product }: { product: Product }) {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">{product.name}</h1>
-        <div className="mt-2">
+        <div className="mt-2 flex flex-wrap gap-2">
           <Badge>{product.category}</Badge>
+          {/* {product.type && <Badge variant="secondary">{product.type}</Badge>}
+          {product.packagingType && <Badge variant="secondary">{product.packagingType}</Badge>} */}
         </div>
       </div>
 
@@ -81,13 +83,90 @@ export function ProductDetails({ product }: { product: Product }) {
       )}
 
       {/* Fertilizer does NOT show price */}
-      {!isFertilizer && (
+      {/* {!isFertilizer && (
         <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p>
-      )}
+      )} */}
+
+        <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p>
+     
+
+      {/* {product.sizeOptions && product.sizeOptions.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="font-semibold">Available Sizes:</h3>
+          <div className="flex flex-wrap gap-2">
+            {product.sizeOptions.map((size, index) => (
+              <Badge key={index} variant="outline">{size}</Badge>
+            ))}
+          </div>
+        </div>
+      )} */}
 
       <div className="prose dark:prose-invert">
         <p>{product.description}</p>
       </div>
+
+{/* Product Attributes Section */}
+<div className="py-6 border-t space-y-3">
+  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Product Details</h3>
+  <ul className="list-disc list-inside space-y-2 pl-5 text-gray-800 dark:text-gray-300">
+    {product.sizeOptions?.length > 0 && (
+      <li className="flex items-start gap-2">
+        <span className="font-semibold">Sizes:</span>
+        <span className="flex-1">{product.sizeOptions.join(", ")}</span>
+      </li>
+    )}
+    {product.packagingType && (
+      <li className="flex items-start gap-2">
+        <span className="font-semibold">Packaging:</span>
+        <span className="flex-1">{product.packagingType}</span>
+      </li>
+    )}
+    {product.type && (
+      <li className="flex items-start gap-2">
+        <span className="font-semibold">Type:</span>
+        <span className="flex-1">{product.type}</span>
+      </li>
+    )}
+  </ul>
+</div>
+
+
+
+     
+
+      {/* Customer Reviews Section - improved UI and after videos */}
+      {product.reviews && product.reviews.length > 0 && (
+        <div className="space-y-6">
+          {/* <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            <span>Customer Reviews</span>
+            <span className="text-base font-normal text-gray-400">({product.reviews.length})</span>
+          </h3> */}
+          <div className="space-y-6">
+            {/* {product.reviews.map((review, idx) => (
+              <div key={review.id} className="bg-white dark:bg-gray-900 rounded-xl shadow p-5 flex flex-col gap-2 border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-200 font-bold text-lg">
+                    {review.reviewerName?.[0]?.toUpperCase() || "?"}
+                  </div>
+                  <span className="font-semibold text-lg">{review.reviewerName}</span>
+                  <div className="flex items-center ml-auto">
+                    {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        className={`text-xl ${i < review.starRating ? "text-yellow-400" : "text-gray-300"}`}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-base text-gray-700 dark:text-gray-300 italic">"{review.reviewText}"</p>
+                {idx < product.reviews.length - 1 && <div className="border-t border-gray-200 dark:border-gray-800 mt-4" />}
+              </div>
+            ))} */}
+          </div>
+        </div>
+      )}
 
       {/* Actions */}
       <div className="pt-6 border-t">
@@ -160,6 +239,42 @@ export function ProductDetails({ product }: { product: Product }) {
             </motion.div>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function ProductReviews({ product }: { product: Product }) {
+  if (!product.reviews || product.reviews.length === 0) return null;
+  return (
+    <div className="space-y-6 pt-8 mb-12">
+      <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+        <span>Customer Reviews</span>
+        <span className="text-base font-normal text-gray-400">({product.reviews.length})</span>
+      </h3>
+      <div className="space-y-6">
+        {product.reviews.map((review, idx) => (
+          <div key={review.id} className="bg-white dark:bg-gray-900 rounded-xl shadow p-5 flex flex-col gap-2 border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-700 dark:text-emerald-200 font-bold text-lg">
+                {review.reviewerName?.[0]?.toUpperCase() || "?"}
+              </div>
+              <span className="font-semibold text-lg">{review.reviewerName}</span>
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`text-xl ${i < review.starRating ? "text-yellow-400" : "text-gray-300"}`}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+            </div>
+            <p className="text-base text-gray-700 dark:text-gray-300 italic">"{review.reviewText}"</p>
+            {idx < product.reviews.length - 1 && <div className="border-t border-gray-200 dark:border-gray-800 mt-4" />}
+          </div>
+        ))}
       </div>
     </div>
   );

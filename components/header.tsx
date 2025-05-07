@@ -17,6 +17,7 @@ import { Badge } from "./ui/badge";
 import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useCart } from "@/contexts/cart-context";
+import Image from "next/image";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,10 +46,17 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center gap-8">
-          <Link href="/" className="font-bold text-2xl text-emerald-600">
-            Vivigro
+          <Link href="/" className="flex items-center">
+            <Image
+              src="https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+              alt="Vivigro Logo"
+              height={48}
+              width={160}
+              style={{ height: 48, width: 'auto' }}
+              priority
+            />
           </Link>
 
           <nav className="hidden md:flex gap-6">

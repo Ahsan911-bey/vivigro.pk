@@ -21,6 +21,7 @@ export async function getAdminProducts(userId: string) {
     const products = await prisma.product.findMany({
       include: {
         images: true,
+        reviews: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -42,6 +43,9 @@ export async function createAdminProduct(
     quantity: number;
     category: Category;
     images: { url: string }[];
+    packagingType?: string | null;
+    sizeOptions?: string[];
+    type?: string | null;
   }
 ) {
   try {
@@ -56,6 +60,9 @@ export async function createAdminProduct(
         images: {
           create: data.images,
         },
+        packagingType: data.packagingType ?? null,
+        sizeOptions: data.sizeOptions ?? [],
+        type: data.type ?? null,
       },
       include: {
         images: true,
@@ -80,6 +87,9 @@ export async function updateAdminProduct(
     quantity: number;
     category: Category;
     images: { url: string }[];
+    packagingType?: string | null;
+    sizeOptions?: string[];
+    type?: string | null;
   }>
 ) {
   try {
@@ -98,6 +108,9 @@ export async function updateAdminProduct(
             create: images,
           },
         }),
+        packagingType: data.packagingType ?? undefined,
+        sizeOptions: data.sizeOptions ?? undefined,
+        type: data.type ?? undefined,
       },
       include: {
         images: true,

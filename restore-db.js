@@ -14,12 +14,16 @@ async function restoreDatabase(backupFile) {
     if (!schema || !schema.includesStockUpdated) {
       console.warn('Warning: Backup file does not include stock_updated field. Some data may be lost.');
     }
+    if (!schema || !schema.includesNewFields) {
+      console.warn('Warning: Backup file does not include new fields (sizeOptions, packagingType, type). Some data may be lost.');
+    }
 
     // Clear existing data
     await prisma.$transaction([
       prisma.cartItem.deleteMany(),
       prisma.orderItem.deleteMany(),
       prisma.order.deleteMany(),
+      prisma.review.deleteMany(),
       prisma.productVideo.deleteMany(),
       prisma.productImage.deleteMany(),
       prisma.product.deleteMany(),
@@ -42,7 +46,13 @@ async function restoreDatabase(backupFile) {
         prisma.product.create({ 
           data: {
             ...product,
-            category: product.category || 'TEXTILE' // Ensure category is set
+            category: product.category || 'TEXTILE', // Ensure category is set
+            sizeOptions: product.sizeOptions || [], // Ensure sizeOptions is set
+            packagingType: product.packagingType || null, // Ensure packagingType is set
+            type: product.type || null, // Ensure type is set
+            reviews: {
+              create: product.reviews || [] // Create associated reviews
+            }
           }
         })
       ),

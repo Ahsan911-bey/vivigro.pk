@@ -5,6 +5,7 @@ import { RelatedProducts } from "@/components/product/related-products";
 import { getProductById, getProducts } from "@/app/actions";
 import type { Product } from "@/types/product";
 import ProductVideoCarousel from "@/components/product/product-video-carousel";
+import { ProductReviews } from "@/components/product/product-details";
 
 export default async function ProductPage({
   params,
@@ -36,6 +37,8 @@ export default async function ProductPage({
       {product.videos && product.videos.length > 0 && (
         <ProductVideoCarousel videos={product.videos} />
       )}
+
+      <ProductReviews product={product} />
 
       <RelatedProducts products={relatedProducts} />
     </div>

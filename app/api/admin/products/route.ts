@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, description, price, quantity, category, images, videos } = body;
+    const { name, description, price, quantity, category, images, videos, packagingType, sizeOptions, type } = body;
 
     const product = await prisma.product.create({
       data: {
@@ -28,6 +28,9 @@ export async function POST(request: Request) {
         ProductVideo: videos && videos.length > 0 ? {
           create: videos.map((url: string) => ({ url })),
         } : undefined,
+        packagingType: packagingType ?? null,
+        sizeOptions: sizeOptions ?? [],
+        type: type ?? null,
       },
       include: {
         images: true,

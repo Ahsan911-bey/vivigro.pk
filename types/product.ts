@@ -12,6 +12,15 @@ export type ProductVideo = {
   productId: string;
 };
 
+export type Review = {
+  id: string;
+  reviewerName: string;
+  reviewText: string;
+  starRating: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -22,6 +31,10 @@ export type Product = {
   videoUrl?: string | null;
   images: ProductImage[];
   videos?: ProductVideo[];
+  sizeOptions: string[];
+  packagingType: string | null;
+  type: string | null;
+  reviews: Review[];
   createdAt: Date;
   updatedAt: Date;
 };

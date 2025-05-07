@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import Image from "next/image"
 
 export default function Footer() {
   return (
@@ -7,7 +8,17 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-bold mb-4">Vivigro</h3>
+            <div className="mb-4">
+              <Image
+                src="https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                alt="Vivigro Logo"
+                height={72}
+                width={300}
+                style={{ height: 72, width: 'auto', objectFit: 'contain' }}
+                priority
+              />
+            </div>
+           
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Premium textile and fertilizer products for businesses across Pakistan.
             </p>

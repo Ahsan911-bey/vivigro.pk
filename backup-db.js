@@ -24,10 +24,15 @@ async function backupDatabase() {
       orderItems,
       cartItems,
       productImages,
-      productVideos
+      productVideos,
+      reviews
     ] = await Promise.all([
       prisma.user.findMany(),
-      prisma.product.findMany(),
+      prisma.product.findMany({
+        include: {
+          reviews: true
+        }
+      }),
       prisma.order.findMany({
         include: {
           items: true,
@@ -45,15 +50,17 @@ async function backupDatabase() {
         }
       }),
       prisma.productImage.findMany(),
-      prisma.productVideo.findMany()
+      prisma.productVideo.findMany(),
+      prisma.review.findMany()
     ]);
 
     // Create backup object
     const backup = {
       timestamp: new Date().toISOString(),
       schema: {
-        version: '1.0',
-        includesStockUpdated: true
+        version: '1.1',
+        includesStockUpdated: true,
+        includesNewFields: true
       },
       data: {
         users,
@@ -62,7 +69,8 @@ async function backupDatabase() {
         orderItems,
         cartItems,
         productImages,
-        productVideos
+        productVideos,
+        reviews
       }
     };
 

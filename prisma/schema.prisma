@@ -20,19 +20,23 @@ model User {
 }
 
 model Product {
-  id           String         @id @default(uuid())
-  name         String
-  description  String
-  price        Float
-  quantity     Int
-  category     Category
-  videoUrl     String?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  cartItems    CartItem[]
-  orderItems   OrderItem[]
-  images       ProductImage[]
-  ProductVideo ProductVideo[]
+  id             String         @id @default(uuid())
+  name           String
+  description    String
+  price          Float
+  quantity       Int
+  category       Category
+  videoUrl       String?
+  sizeOptions    String[]      @default([])
+  packagingType  String?
+  type           String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  images         ProductImage[]
+  ProductVideo   ProductVideo[]
+  reviews        Review[]
 }
 
 model ProductImage {
@@ -88,6 +92,19 @@ model OrderItem {
   price     Float
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id            String   @id @default(uuid())
+  productId     String
+  reviewerName  String
+  reviewText    String
+  starRating    Int      @db.SmallInt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
 
 enum Category {

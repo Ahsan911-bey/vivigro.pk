@@ -10,12 +10,13 @@ export async function getProducts() {
       include: {
         images: true,
         ProductVideo: true,
+        reviews: true,
       },
     });
-    // Map ProductVideo to videos for frontend compatibility
+    // Map ProductVideo to videos for frontend compatibility and ensure all fields are present
     const mappedProducts = products.map((product: any) => ({
       ...product,
-      videos: product.ProductVideo,
+      videos: product.ProductVideo ?? [],
     }));
     return { data: mappedProducts, error: null };
   } catch (error) {
@@ -32,11 +33,15 @@ export async function getProductById(id: string) {
       include: {
         images: true,
         ProductVideo: true,
+        reviews: true,
       },
     });
-    // Map ProductVideo to videos for frontend compatibility
+    // Map ProductVideo to videos for frontend compatibility and ensure all fields are present
     const mappedProduct = product
-      ? { ...product, videos: product.ProductVideo }
+      ? {
+          ...product,
+          videos: product.ProductVideo ?? [],
+        }
       : null;
     return { data: mappedProduct, error: null };
   } catch (error) {
@@ -302,7 +307,7 @@ export async function updateOrderStatus(orderId: string, status: "COMPLETED" | "
   try {
     const order = await prisma.order.update({
       where: { id: orderId },
-      data: { orderStatus: status },
+      data: { status },
     });
     return { data: order, error: null };
   } catch (error) {
