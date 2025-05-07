@@ -21,7 +21,7 @@ export function ContactInfo() {
           <div>
             <h3 className="font-medium mb-1">Address</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Vivigro, Sahiwal
+            Pakpattan, Bypass, Pakpattan Road, Sahiwal Pakpattan Road, Bhullay ki jhook, Road, off Bypass, Sahiwal, 57000,
               <br />
               Pakistan
               
@@ -36,9 +36,7 @@ export function ContactInfo() {
           <div>
             <h3 className="font-medium mb-1">Phone</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              +92 123 456 7890
-              <br />
-              +92 123 456 7891
+            03108690858
             </p>
           </div>
         </div>
@@ -64,9 +62,7 @@ export function ContactInfo() {
           <div>
             <h3 className="font-medium mb-1">Business Hours</h3>
             <p className="text-gray-600 dark:text-gray-300">
-              Monday - Friday: 9:00 AM - 6:00 PM
-              <br />
-              Saturday: 10:00 AM - 4:00 PM
+              Monday - Saturday: 9:00 AM - 6:00 PM
               <br />
               Sunday: Closed
             </p>

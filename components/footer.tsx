@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link"
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react"
+import { Facebook, Twitter, Mail, Phone, MapPin, MessageCircle } from "lucide-react"
 import Image from "next/image"
 import { useTheme } from "next-themes"
+import { useState, useEffect } from "react"
 
 export default function Footer() {
-  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 border-t">
@@ -14,17 +20,19 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="mb-4">
-              <Image
-                src={theme === 'dark' 
-                  ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
-                  : "https://vivigropk.vercel.app/logoFinal.png"
-                }
-                alt="Vivigro Logo"
-                height={72}
-                width={300}
-                style={{ height: 72, width: 'auto', objectFit: 'contain' }}
-                priority
-              />
+              {mounted && (
+                <Image
+                  src={resolvedTheme === 'dark' 
+                    ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                    : "https://vivigropk.vercel.app/logoFinal.png"
+                  }
+                  alt="Vivigro Logo"
+                  height={72}
+                  width={300}
+                  style={{ height: 72, width: 'auto', objectFit: 'contain' }}
+                  priority
+                />
+              )}
             </div>
            
             <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -34,11 +42,8 @@ export default function Footer() {
               <Link href="https://facebook.com" className="text-gray-500 hover:text-emerald-600">
                 <Facebook size={20} />
               </Link>
-              <Link href="https://instagram.com" className="text-gray-500 hover:text-emerald-600">
-                <Instagram size={20} />
-              </Link>
-              <Link href="https://twitter.com" className="text-gray-500 hover:text-emerald-600">
-                <Twitter size={20} />
+              <Link href="https://wa.me/923108690858" className="text-gray-500 hover:text-emerald-600">
+                <MessageCircle size={20} />
               </Link>
             </div>
           </div>
@@ -96,11 +101,11 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
                 <MapPin size={16} className="text-emerald-600" />
-                <span className="text-gray-600 dark:text-gray-300">Vivigro, Pakistan</span>
+                <span className="text-gray-600 dark:text-gray-300 text-sm">Pakpattan, Bypass, Pakpattan Road,<br /> Sahiwal Pakpattan Road, Bhullay <br />ki jhook, Road, off Bypass,<br /> Sahiwal, 57000</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-emerald-600" />
-                <span className="text-gray-600 dark:text-gray-300">+92 123 456 7890</span>
+                <span className="text-gray-600 dark:text-gray-300">03108690858</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={16} className="text-emerald-600" />

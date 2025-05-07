@@ -22,11 +22,16 @@ import { useTheme } from "next-themes";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, status } = useSession();
   const { cartCount } = useCart();
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Force a re-render when session status changes
   useEffect(() => {
@@ -51,17 +56,19 @@ export default function Header() {
       <div className="container flex h-20 items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center">
-            <Image
-              src={theme === 'dark' 
-                ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
-                : "https://vivigropk.vercel.app/logoFinal.png"
-              }
-              alt="Vivigro Logo"
-              height={48}
-              width={160}
-              style={{ height: 48, width: 'auto' }}
-              priority
-            />
+            {mounted && (
+              <Image
+                src={resolvedTheme === 'dark' 
+                  ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                  : "https://vivigropk.vercel.app/logoFinal.png"
+                }
+                alt="Vivigro Logo"
+                height={48}
+                width={160}
+                style={{ height: 48, width: 'auto' }}
+                priority
+              />
+            )}
           </Link>
 
           <nav className="hidden md:flex gap-6">
