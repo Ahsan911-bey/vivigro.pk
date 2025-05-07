@@ -18,6 +18,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { useCart } from "@/contexts/cart-context";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function Header() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { cartCount } = useCart();
+  const { theme } = useTheme();
 
   // Force a re-render when session status changes
   useEffect(() => {
@@ -50,7 +52,10 @@ export default function Header() {
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center">
             <Image
-              src="https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+              src={theme === 'dark' 
+                ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                : "https://vivigropk.vercel.app/vivigrologo2.jpg"
+              }
               alt="Vivigro Logo"
               height={48}
               width={160}

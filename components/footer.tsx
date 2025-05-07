@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react"
 import Image from "next/image"
+import { useTheme } from "next-themes"
 
 export default function Footer() {
+  const { theme } = useTheme();
+
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 border-t">
       <div className="container mx-auto px-4 py-12">
@@ -10,7 +15,10 @@ export default function Footer() {
           <div>
             <div className="mb-4">
               <Image
-                src="https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                src={theme === 'dark' 
+                  ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
+                  : "https://vivigropk.vercel.app/vivigrologo2.jpg"
+                }
                 alt="Vivigro Logo"
                 height={72}
                 width={300}
