@@ -17,7 +17,7 @@ export default function Footer() {
               <Image
                 src={theme === 'dark' 
                   ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
-                  : "https://vivigropk.vercel.app/vivigrologo2.jpg"
+                  : "https://vivigropk.vercel.app/logoFinal.png"
                 }
                 alt="Vivigro Logo"
                 height={72}
