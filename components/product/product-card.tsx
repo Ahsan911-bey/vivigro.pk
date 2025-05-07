@@ -87,14 +87,14 @@ export function ProductCard({ product }: { product: Product }) {
           {product.category !== "FERTILIZER" ? (
             <>
               <p className="font-medium text-lg">${product.price.toFixed(2)}</p>
-              <Button
+              {/* <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleAddToCart}
                 className="hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
               >
                 <ShoppingCart className="h-5 w-5" />
-              </Button>
+              </Button> */}
             </>
           ) : null}
 

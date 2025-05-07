@@ -178,7 +178,7 @@ export function ProductDetails({ product }: { product: Product }) {
               size="lg"
             >
               <a
-                href={`https://wa.me/923176174401?text=I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
+                href={`https://wa.me/923108690858?text=I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -197,7 +197,7 @@ export function ProductDetails({ product }: { product: Product }) {
           </motion.div>
         ) : (
           <>
-            <div className="flex items-center mb-6">
+            {/* <div className="flex items-center mb-6">
               <span className="mr-4">Quantity:</span>
               <div className="flex items-center border rounded-md">
                 <Button
@@ -220,9 +220,9 @@ export function ProductDetails({ product }: { product: Product }) {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
+            </div> */}
 
-            <motion.div whileTap={{ scale: 0.95 }}>
+            {/* <motion.div whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={handleAddToCart}
                 disabled={isLoading || product.quantity === 0}
@@ -236,7 +236,32 @@ export function ProductDetails({ product }: { product: Product }) {
                   ? "Out of Stock"
                   : "Add to Cart"}
               </Button>
-            </motion.div>
+            </motion.div> */}
+            {/* Contact on WhatsApp Button */ }
+            <motion.div whileTap={{ scale: 0.95 }}>
+            <Button
+              asChild
+              className="w-full bg-green-600 hover:bg-green-700 text-white gap-2"
+              size="lg"
+            >
+              <a
+                href={`https://wa.me/923108690858?text=I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path d="M380.9 97.1C339 ... (shortened) ..." />
+                </svg>
+                <MessageCircle className="w-5 h-5" />
+                Contact on WhatsApp
+              </a>
+            </Button>
+          </motion.div>
           </>
         )}
       </div>
