@@ -100,9 +100,9 @@ export function ProductCard({ product }: { product: Product }) {
 
               {product.category === "FERTILIZER" ? (
             <>
-              <p className="font-medium text-lg">
+              {/* <p className="font-medium text-lg">
                 ${product.price.toFixed(2)}
-              </p>
+              </p> */}
               {/* <Button
                 variant="ghost"
                 size="icon"

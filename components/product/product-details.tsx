@@ -83,11 +83,11 @@ export function ProductDetails({ product }: { product: Product }) {
       )}
 
       {/* Fertilizer does NOT show price */}
-      {/* {!isFertilizer && (
+      {!isFertilizer && (
         <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p>
-      )} */}
+      )}
 
-        <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p>
+        {/* <p className="text-2xl font-bold">PKR {product.price.toFixed(2)}</p> */}
      
 
       {/* {product.sizeOptions && product.sizeOptions.length > 0 && (
