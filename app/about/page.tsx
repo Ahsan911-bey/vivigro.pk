@@ -2,6 +2,7 @@ import Image from "next/image"
 import { MissionVision } from "@/components/about/mission-vision"
 import { TrustedPartners } from "@/components/trusted-partners"
 import { Journey } from "@/components/about/journey"
+import Team from "@/components/team"
 
 export default function AboutPage() {
   return (
@@ -41,6 +42,8 @@ export default function AboutPage() {
       <Journey />
 
       <MissionVision />
+
+      <Team />
 
       <TrustedPartners />
     </div>
