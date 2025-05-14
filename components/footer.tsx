@@ -101,7 +101,7 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
                 <MapPin size={16} className="text-emerald-600" />
-                <span className="text-gray-600 dark:text-gray-300 text-sm">Pakpattan, Bypass, Pakpattan Road,<br /> Sahiwal Pakpattan Road, Bhullay <br />ki jhook, Road, off Bypass,<br /> Sahiwal, 57000</span>
+                <span className="text-gray-600 dark:text-gray-300 text-sm">ViviGro Sustainable Solutions (Pvt)  Limited<br /> Warehouses 1 km off  Sahiwal Bypass <br />Pakpattan Road, Sahiwal</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="text-emerald-600" />

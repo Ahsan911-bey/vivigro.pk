@@ -21,7 +21,7 @@ export function ContactInfo() {
           <div>
             <h3 className="font-medium mb-1">Address</h3>
             <p className="text-gray-600 dark:text-gray-300">
-            Pakpattan, Bypass, Pakpattan Road, Sahiwal Pakpattan Road, Bhullay ki jhook, Road, off Bypass, Sahiwal, 57000,
+            ViviGro Sustainable Solutions (Pvt)  Limited  Warehouses 1 km off  Sahiwal Bypass, Pakpattan Road, Sahiwal
               <br />
               Pakistan
               
@@ -37,6 +37,12 @@ export function ContactInfo() {
             <h3 className="font-medium mb-1">Phone</h3>
             <p className="text-gray-600 dark:text-gray-300">
             03108690858
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+            03008690858
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+            03017553366
             </p>
           </div>
         </div>
