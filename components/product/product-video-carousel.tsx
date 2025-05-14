@@ -13,7 +13,7 @@ export default function ProductVideoCarousel({ videos }: { videos: ProductVideo[
   return (
     <div className="mb-16">
       <h2 className="text-2xl font-bold mb-6">Product Video</h2>
-      <div className="relative w-full flex justify-center items-center aspect-video rounded-lg overflow-hidden bg-black">
+      <div className="relative w-full h-[520px] md:h-full flex justify-center items-center aspect-video rounded-lg overflow-hidden bg-black">
         {isFacebook ? (
           <iframe
             src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(currentVideo.url)}&show_text=false&width=400`}
