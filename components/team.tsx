@@ -25,12 +25,6 @@ const teamMembers: TeamMember[] = [
     role: "Product Development Manager",
     image: "/Productmanagement.jpg",
     description: "Responsible for driving the innovation and creation of new products, defining product strategy, managing the development process, and ensuring successful product launches."
-  },
-  {
-    name: "Alisha Dilsher Ali ",
-    role: "Sales Manager",
-    image: "/DigitalMediaSpecialist.jpg",
-    description: "Responsible for creating engaging video and photo content, conducting interviews, and optimizing digital media to enhance brand presence and audience connection."
   }
 ];
 
