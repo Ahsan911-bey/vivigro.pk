@@ -73,7 +73,7 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-
+              
           <div>
             <h3 className="text-lg font-bold mb-4">Products</h3>
             <ul className="space-y-2">
@@ -94,6 +94,23 @@ export default function Footer() {
                 </Link>
               </li>
             </ul>
+            <div>
+  <h3 className="text-lg font-bold mb-4 mt-4">Legal & Policies</h3>
+  <ul className="space-y-2">
+    <li>
+      <Link href="/Return-etc" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Privacy Policy</Link>
+    </li>
+    <li>
+      <Link href="/Return-etc" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Return & Refund Policy</Link>
+    </li>
+    <li>
+      <Link href="/Return-etc" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Shipping Policy</Link>
+    </li>
+    <li>
+      <Link href="/Return-etc" className="text-gray-600 dark:text-gray-300 hover:text-emerald-600">Terms & Conditions</Link>
+    </li>
+  </ul>
+</div>
           </div>
 
           <div>
