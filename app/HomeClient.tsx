@@ -93,32 +93,32 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {fertilizers.map((product) => (
-                  <Card key={product.id} className="overflow-hidden">
-                    {product.images[0] && (
-                      <div className="relative h-80 w-full bg-white">
-                        <Image
-                          src={product.images[0].url}
-                          alt={product.name}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )}
-                    <div className="p-4">
-                      <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                      <p className="text-sm text-gray-500 line-clamp-2 mb-2">
-                        {product.description}
-                      </p>
-                      <div className="flex justify-between items-center">
-                        {/* <span className="font-bold">{formatPrice(product.price)}</span> */}
-                        <div className="flex justify-center w-4/5 mx-auto">
-                          <Button asChild size="sm" className="w-full">
-                            <Link href={`/catalog/${product.id}`}>View Details</Link>
-                          </Button>
+                  <Link key={product.id} href={`/catalog/${product.id}`} className="block group">
+                    <Card className="overflow-hidden cursor-pointer transition-shadow group-hover:shadow-lg">
+                      {product.images[0] && (
+                        <div className="relative h-80 w-full bg-white">
+                          <Image
+                            src={product.images[0].url}
+                            alt={product.name}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                      <div className="p-4">
+                        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                        <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+                          {product.description}
+                        </p>
+                        <div className="flex justify-between items-center">
+                          {/* <span className="font-bold">{formatPrice(product.price)}</span> */}
+                          <div className="flex justify-center w-4/5 mx-auto">
+                            <span className="w-full text-center text-emerald-700 font-semibold group-hover:underline">View Details</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Card>
+                    </Card>
+                  </Link>
                 ))}
               </div>
               <div className="flex justify-center">
