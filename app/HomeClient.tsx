@@ -31,8 +31,8 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
       <section className="relative h-[90vh] w-full flex items-center justify-center">
         {/* Background Image */}
         <Image
-          src="https://vivigropk.vercel.app/cover.jpg"
-          alt="Vivigro Pakistan Fertilizer Products - Buy Fertilizer in Pakistan"
+          src="https://vivigro.pk/cover.jpg"
+          alt="ViviGro Sustainable Solutions Pakistan"
           fill
           className="object-cover"
           priority
@@ -238,7 +238,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
         sameAs: [
           'https://www.facebook.com/vivigropk',
         ],
-        description: 'Vivigro Pakistan is your trusted source for premium fertilizers. Buy fertilizer online in Pakistan for better crop yields.'
+        description: 'Vivigro Pakistan is your trusted source for premium fertilizers. Buy fertilizer in Pakistan for better crop yields.'
       }) }} />
     </div>
   );
