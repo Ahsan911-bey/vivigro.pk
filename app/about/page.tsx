@@ -10,7 +10,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto mb-16">
         <h1 className="text-4xl font-bold mb-6 text-center">About Vivigro</h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 text-center">
-          Delivering premium textile and fertilizer products across Pakistan since 2005.
+        Delivering premium textile and fertilizer products across Pakistan since 2005.
         </p>
       </div>
 
@@ -35,7 +35,7 @@ export default function AboutPage() {
         </div>
 
         <div className="relative h-[400px] rounded-lg overflow-hidden shadow-xl">
-          <Image src="https://vivigro.com/wp-content/uploads/2023/09/IMG_0149-scaled.jpg" alt="Vivigro History" fill className="object-cover" />
+          <Image src="https://vivigro.com/wp-content/uploads/2023/09/IMG_0149-scaled.jpg" alt="Vivigro Pakistan History - Fertilizer Company in Pakistan" fill className="object-cover" />
         </div>
       </div>
 
@@ -46,6 +46,25 @@ export default function AboutPage() {
       <Team />
 
       <TrustedPartners />
+
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Vivigro Pakistan',
+        url: 'https://vivigro.pk',
+        logo: 'https://vivigro.pk/logofinalwebp.webp',
+        contactPoint: [{
+          '@type': 'ContactPoint',
+          telephone: '+92-300-8690858',
+          contactType: 'customer service',
+          areaServed: 'PK',
+          availableLanguage: ['English', 'Urdu']
+        }],
+        sameAs: [
+          'https://www.facebook.com/vivigropk',
+        ],
+        description: 'Vivigro Pakistan is a leading fertilizer company providing premium products for farmers in Pakistan.'
+      }) }} />
     </div>
   )
 }

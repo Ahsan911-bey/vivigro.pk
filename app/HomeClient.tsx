@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { HistorySnippet } from "@/components/history-snippet";
 import { Card } from "@/components/ui/card";
-import { Product } from "@prisma/client";
+import type { Product } from "@/types/product";
 import { TrustedPartners } from "@/components/trusted-partners";
 import { WhyChooseUs } from "@/components/why-choose-us";
 
@@ -32,7 +32,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
         {/* Background Image */}
         <Image
           src="https://vivigropk.vercel.app/cover.jpg"
-          alt="Vivigro Fertilizers"
+          alt="Vivigro Pakistan Fertilizer Products - Buy Fertilizer in Pakistan"
           fill
           className="object-cover"
           priority
@@ -204,6 +204,42 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
           </div>
         </section>
       </div>
+
+      {/* Add LocalBusiness Schema Markup */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: 'Vivigro Pakistan',
+        image: 'https://vivigro.pk/logofinalwebp.webp',
+        '@id': 'https://vivigro.pk',
+        url: 'https://vivigro.pk',
+        telephone: '+92-300-8690858',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Sahiwal',
+          addressLocality: 'Sahiwal',
+          addressRegion: 'Punjab',
+          postalCode: '57000',
+          addressCountry: 'PK',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 30.6700,
+          longitude: 73.1067,
+        },
+        openingHoursSpecification: [{
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: [
+            'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+          ],
+          opens: '09:00',
+          closes: '18:00',
+        }],
+        sameAs: [
+          'https://www.facebook.com/vivigropk',
+        ],
+        description: 'Vivigro Pakistan is your trusted source for premium fertilizers. Buy fertilizer online in Pakistan for better crop yields.'
+      }) }} />
     </div>
   );
 } 

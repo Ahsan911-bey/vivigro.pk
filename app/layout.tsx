@@ -12,8 +12,22 @@ import { CartProvider } from "@/contexts/cart-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Vivigro",
-  description: "Vivigro - Your Growth Partner",
+  title: "Vivigro Pakistan | Buy Fertilizer Online | Premium Fertilizers for Farmers",
+  description: "Vivigro Pakistan - Buy premium fertilizers online. Serving farmers across Pakistan with VIVI MAX AMMONIUM SULPHATE, VIVI PREMIUM IRON-EDHHA 6%, and more. Your trusted source for crop nutrition.",
+  openGraph: {
+    title: "Vivigro Pakistan | Buy Fertilizer Online",
+    description: "Vivigro Pakistan - Buy premium fertilizers online. Serving farmers across Pakistan with VIVI MAX AMMONIUM SULPHATE, VIVI PREMIUM IRON-EDHHA 6%, and more.",
+    url: "https://vivigro.pk/",
+    siteName: "Vivigro Pakistan",
+    locale: "en_PK",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vivigro Pakistan | Buy Fertilizer Online",
+    description: "Vivigro Pakistan - Buy premium fertilizers online. Serving farmers across Pakistan with VIVI MAX AMMONIUM SULPHATE, VIVI PREMIUM IRON-EDHHA 6%, and more.",
+    site: "@vivigropk",
+  },
 };
 
 export default async function RootLayout({

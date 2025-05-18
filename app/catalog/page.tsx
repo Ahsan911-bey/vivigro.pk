@@ -13,7 +13,7 @@ export default async function CatalogPage({
 }) {
   const { category, search } = searchParams;
   const result = await getProducts();
-  const products: Product[] = result.data?.sort((a, b) => {
+  const products: Product[] = result.data?.sort((a: Product, b: Product) => {
     // Sort by creation date to match home page order
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   }) || [];

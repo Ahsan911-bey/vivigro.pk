@@ -55,7 +55,7 @@ export function ProductCard({ product }: { product: Product }) {
           <div className="relative h-80 w-full bg-white overflow-hidden rounded-t-lg">
             <Image
               src={product.images[0]?.url || "/placeholder.svg"}
-              alt={product.name}
+              alt={`${product.name} - ${product.category} Fertilizer by Vivigro Pakistan`}
               fill
               className="object-contain"
             />
@@ -65,7 +65,7 @@ export function ProductCard({ product }: { product: Product }) {
           <div>
             <Image
               src={product.images[0]?.url || "/placeholder.svg"}
-              alt={product.name}
+              alt={`${product.name} - ${product.category} Textile by Vivigro Pakistan`}
               fill
               className="object-cover rounded-t-lg"
             />

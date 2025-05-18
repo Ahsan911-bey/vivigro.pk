@@ -24,7 +24,7 @@ export default function Footer() {
                 <Image
                   src={resolvedTheme === 'dark' 
                     ? "https://vivigro.com/wp-content/uploads/2021/01/ViviGro-Logo-white-01.png"
-                    : "https://vivigropk.vercel.app/logoFinal.png"
+                    : "https://vivigro.pk/logofinalwebp.webp"
                   }
                   alt="Vivigro Logo"
                   height={72}
