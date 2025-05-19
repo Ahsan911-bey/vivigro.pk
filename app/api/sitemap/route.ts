@@ -38,7 +38,7 @@ export async function GET() {
   </url>`).join('')}
   ${products.map(product => `
   <url>
-    <loc>https://vivigro.pk/product/${product.id}</loc>
+    <loc>https://vivigro.pk/catalog/${product.id}</loc>
     <lastmod>${product.updatedAt.toISOString()}</lastmod>
     <priority>0.7</priority>
     <changefreq>weekly</changefreq>
