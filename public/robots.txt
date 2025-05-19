@@ -1,3 +1,6 @@
+# Allow all crawlers
 User-agent: *
 Allow: /
-Sitemap: https://vivigro.pk/sitemap.xml 
+
+# Sitemap location
+Sitemap: https://vivigro.pk/api/sitemap 

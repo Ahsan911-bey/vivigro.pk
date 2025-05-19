@@ -2,6 +2,8 @@ export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { Category } from "@prisma/client";
 import HomeClient from "./HomeClient";
+import JsonLd from '@/components/JsonLd';
+import { organizationSchema, websiteSchema } from '@/lib/schema';
 
 async function getFeaturedProducts() {
   const [fertilizers, textiles] = await Promise.all([
@@ -24,5 +26,11 @@ async function getFeaturedProducts() {
 
 export default async function Home() {
   const { fertilizers, textiles } = await getFeaturedProducts();
-  return <HomeClient fertilizers={fertilizers} textiles={textiles} />;
+  return (
+    <>
+      <JsonLd data={organizationSchema} />
+      <JsonLd data={websiteSchema} />
+      <HomeClient fertilizers={fertilizers} textiles={textiles} />
+    </>
+  );
 }

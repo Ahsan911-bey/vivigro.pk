@@ -35,6 +35,12 @@ export async function middleware(request: NextRequest) {
       }
     }
 
+    // Check if the request is for sitemap.xml
+    if (path === '/sitemap.xml') {
+      // Redirect to the dynamic sitemap
+      return NextResponse.redirect(new URL('/api/sitemap', request.url));
+    }
+
     return NextResponse.next();
   } catch (error) {
     console.error("Middleware error:", error);

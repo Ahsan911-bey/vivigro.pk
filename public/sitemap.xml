@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://vivigro.pk/</loc>
@@ -16,5 +17,9 @@
     <loc>https://vivigro.pk/contact</loc>
     <priority>0.8</priority>
   </url>
-  <!-- Add product URLs dynamically in production -->
+  <!-- This sitemap is now dynamically generated at /api/sitemap -->
+  <url>
+    <loc>https://vivigro.pk/api/sitemap</loc>
+    <priority>0.9</priority>
+  </url>
 </urlset> 
