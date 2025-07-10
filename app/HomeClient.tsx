@@ -31,7 +31,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
       <section className="relative h-[90vh] w-full flex items-center justify-center">
         {/* Background Image */}
         <Image
-          src="https://vivigro.pk/cover.jpg"
+          src="/cover.jpg"
           alt="ViviGro Sustainable Solutions Pakistan"
           fill
           className="object-cover"
