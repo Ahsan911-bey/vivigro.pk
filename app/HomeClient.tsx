@@ -94,9 +94,9 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {fertilizers.map((product) => (
                   <Link key={product.id} href={`/catalog/${product.id}`} className="block group">
-                    <Card className="overflow-hidden cursor-pointer transition-shadow group-hover:shadow-lg">
+                    <Card className="overflow-hidden cursor-pointer transition-shadow group-hover:shadow-lg h-[480px] flex flex-col">
                       {product.images[0] && (
-                        <div className="relative h-80 w-full bg-white">
+                        <div className="relative h-64 w-full bg-white flex-shrink-0">
                           <Image
                             src={product.images[0].url}
                             alt={product.name}
@@ -105,12 +105,14 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
                           />
                         </div>
                       )}
-                      <div className="p-4">
-                        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                        <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+                      <div className="p-4 flex flex-col flex-1">
+                        <h3 className="font-semibold text-lg mb-2 line-clamp-2 overflow-hidden text-ellipsis" title={product.name}>
+                          {product.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 line-clamp-2 mb-2 flex-grow">
                           {product.description}
                         </p>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center mt-auto">
                           {/* <span className="font-bold">{formatPrice(product.price)}</span> */}
                           <div className="flex justify-center w-4/5 mx-auto">
                             <span className="w-full text-center text-emerald-700 font-semibold group-hover:underline">View Details</span>
