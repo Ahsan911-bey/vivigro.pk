@@ -130,7 +130,8 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
           )}
         </section>
 
-        {/* Featured Textiles Section */}
+        {/* Featured Textiles Section - COMMENTED OUT */}
+        {/*
         <section className="py-16">
           {textiles.length === 0 ? (
             <div className="text-center text-gray-500 text-lg py-12">No textile products found.</div>
@@ -175,6 +176,7 @@ export default function HomeClient({ fertilizers, textiles }: HomeClientProps) {
             </>
           )}
         </section>
+        */}
 
         {/* History Snippet */}
         <section className="py-16">
